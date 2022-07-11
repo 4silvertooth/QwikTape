@@ -1,0 +1,57 @@
+@set main {
+
+  :root {
+    flow: horizontal;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    z-index: -1;
+  }
+
+  :root > section.editor {
+    size: *;
+    overflow: scroll-indicator;
+    background: white;
+    flow: stack;
+  }
+
+  :root > section.sidepanel {
+    size: 220dip;
+    height: *;
+    background: #eee;
+    //flow: stack;
+  }
+
+  /*body > section.sidepanel > button#close {
+    stroke-width: 1px;
+    foreground-position: 50%;
+    foreground-size: 10dip 10dip;
+    background:rgba(0,0,0,0.25);
+    border-radius: 50% 50%;
+    foreground-image: url(path:m0 0 2-2m0 2-2-2);
+    margin-left: *;
+    margin-right: 1em;
+    cursor: pointer;
+  }*/
+
+  :root > section.editor > button#settings:hover {
+    fill: black;
+    background: rgba(0,0,0, 0.25);
+    cursor: pointer;
+  }
+
+  :root > section.editor > button#settings {
+    width: 32dip;
+    height: 32dip;
+    background: 0;
+    border: 0;
+    border-radius: 50% 50%;
+    foreground-position: 50%;
+    fill: gray;
+    foreground-size: 24dip 24dip;
+    foreground-image: url(assets/gear.svg);
+    margin-left: *;
+    margin-right: 1em;
+    padding: none;
+  }
+}  

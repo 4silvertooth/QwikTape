@@ -1,0 +1,115 @@
+@set browse-storage
+{
+  :root {
+    size: *;
+    //height: *;
+    //width: 200dip;
+    flow: horizontal-wrap;
+    font-family: monospace;
+    font-size: 9pt;
+    overflow-y: scroll-indicator;
+    padding-right: 12dip;
+    padding-top: 12dip;
+    background: #eee;
+  }
+
+  :root > div {
+    size: 80dip 160dip;
+    margin: 12dip;
+    text-align: center;
+    //background: #fff740;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 4dip;
+  }
+  
+  :root > div[current=true] {
+    background:rgba(0,0,0,0.25);
+  }
+
+  :root > div[deleting=true] {
+    background: #ff6347;
+  }
+
+  :root > div#add {
+    font-size: 12pt;
+  }
+
+  :root .middle {
+    vertical-align: middle;
+  }
+
+  :root > div > div.name {
+    white-space: wrap;
+    //word-wrap: break-word;
+    word-break: break-all;
+    overflow: epsillon;
+    font-size: 10pt;
+    padding: 0.5em;
+  }
+
+  :root > div[key] > div.file {
+    size: *;
+    flow: stack;
+  }
+
+  :root > div[key] > div.file > div.content {
+    color: #ae7d00;
+    margin: 4dip;
+    padding: 4dip;
+    size: *;
+    overflow: hidden;
+    background: #fbfbf8;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+
+    //png is screenshot css below
+    background-image: url(../assets/paper.png);
+    //stroke: #d7d7c1;
+    //stroke-width: 1px;
+    //background-size: 160dip 3dip;
+    //background-image: url(path:m0 0 160 0m0 -10);
+    background-repeat: repeat-y;
+  }
+
+  :root > div[key] > div.file > div.context {
+    size: 32dip 32dip;
+    margin-left: *;
+    border-radius: 8dip;
+    fill: rgba(0,0,0, 0.60);
+    foreground-position: 50%;
+  }
+  
+  :root > div[key] > div.file:hover > div.context {
+    background: rgba(0,0,0, 0.25);
+    foreground-image: url(../assets/dots.svg);    
+  }
+  
+  :root > div[key] > input {
+    text-align: center;
+    font-size: 10pt;
+    size: *;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  :root > menu.popup {
+    font-size: 10pt;
+  }
+
+  :root > menu.popup > li {
+    foreground-size: 18dip;
+    foreground-position: 4dip 50%;
+  }
+
+  :root > menu.popup > li:hover {
+    background: color(accent-color);
+  }
+  
+  :root > menu.popup > li#delete {
+    foreground-image: url(../assets/delete.svg);
+  }
+
+  :root > menu.popup > li#rename {
+    foreground-image: url(../assets/rename.svg);
+  }  
+}

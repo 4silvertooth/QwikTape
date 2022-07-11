@@ -1,0 +1,145 @@
+@set tabs 
+{
+  
+  :root {
+    width: *;
+    flow: horizontal;
+    height: inherit;
+    background-color: #eee;
+    font-family: monospace;
+    font-size: 10pt;
+    vertical-align: middle;
+  }
+  
+  :root > .shell-icon {
+    behavior: shell-icon;
+    foreground-position: 4dip 50%;
+  }
+  
+  :root > div {
+    flow: horizontal;
+    height: 80%;
+    width: *;
+    max-width: 12%;
+    padding-left: 24dip;
+    padding-right: 4dip;
+    margin-right: 0.5em;
+    vertical-align: middle;
+    border-radius: 2dip;
+  }
+  
+  :root > div > .name {
+    width: *;
+    min-width: 2em;
+    padding-top: 0.2em;
+    height: 1.2em;
+    line-height: 1em;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    overflow: hidden;
+  }
+  
+  /*:root > div > label {
+    display: inline-block;
+  }*/
+  
+  :root button {
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  
+  :root button:hover {
+    background:rgba(0,0,0,0.25);
+  } 
+
+  :root > div > button#close {
+    stroke-width: 1px;
+    background-position: 50%;
+    background-size: 10dip 10dip;
+    background-image: url(path:m0 0 2-2m0 2-2-2);
+    //margin-left: *;
+    width: 20dip;
+    height: 20dip;
+  }
+  
+  :root > button#bookmarks {
+    width: 60dip;
+    height: 60dip;
+    margin-right: 12dip;
+    background: transparent;
+    padding-top: 0.5em;
+    vertical-align: top;
+    //color: white;
+    font-weight: bold;
+
+    foreground-position: 50% 50%;
+    foreground-image: url(../assets/Icon.svg);
+    foreground-size: 22dip 22dip;
+
+    background-size: 60dip 60dip;
+    fill: rgba(0,0,0,0.25);
+    stroke-width: 2dip;
+    stroke: rgba(0,0,0, 0.10);
+    background-image: url(path:m0 0 0 5 2-1 2 1 0-5);
+
+    //border-radius: 50%;
+    //box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+  }
+
+  :root > button#add {
+    stroke-width: 2dip;
+    background-position: 50% 50%;
+    background-size: 14dip 14dip;
+    background-image: url(path:m2 0 0-2m1 1-2 0);
+    margin-left: 1em;
+    width: 30dip;
+    height: 30dip;
+  }
+
+  :root > div:hover {
+    background:rgba(0,0,0,0.25);
+    cursor: pointer;
+  }
+
+  :root > div[active=true] {
+    background: white;
+    cursor: default;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+  }
+  
+  :root > menu.popup {
+    height: *;
+  }
+  
+  
+  /*:root > div {
+    background-image: url(path:E M0 -0C4 -8 2 0 20 0L-20 0C-2 0 -4 -8 -0 -0);
+    background-repeat: no-repeat;
+    background-size:100% 100%;
+    fill: #fbfbf8;
+    stroke: #888;
+    stroke-width: 2dip;
+    border-bottom: 1dip solid #888;
+    width: max-content;
+    height: window-caption-height;
+    max-height: window-caption-height;
+    //margin-top: 4dip;
+    padding-left: 20dip;
+    padding-right: 20dip;
+  }
+  
+  :root > div > span#close,
+  :root > div:hover {
+    fill: #fbfcb8;
+    cursor: pointer;
+    border-bottom:  1dip solid white;
+  }
+
+  :root > div[active=true] {
+    fill: #fff740;
+    cursor: default;
+    border-bottom: none;
+  }*/
+}

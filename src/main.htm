@@ -1,0 +1,135 @@
+﻿<html window-frame="extended" window-resizable="true" window-state="maximized">
+<header>
+  <window-caption role=window-caption>Tape</window-caption>
+  <window-buttons>
+    <window-button role="window-minimize"></window-button>
+    <window-button role="window-maximize"></window-button>
+    <window-button role="window-close"></window-button>
+  </window-buttons>
+</header>
+<head>
+<title>Tape</title>
+<style src="window.css"/>
+
+<script type="module">
+  import { Storage } from "./storage/storage.js";
+  import { Tabs, BrowseStorage, Editor, SettingsForm } from "./components/index.js";
+
+  class App extends Element {
+    currentTape;
+    tabs;
+    settings;
+
+    constructor(props) {
+      super();
+      this.currentTape = Storage.currentTape();
+      this.settings = Storage.getSettings() ?? {precision: 2, padding: 10};
+      //this.settings = {precision: 2, padding: 10};
+    }
+    
+    componentDidMount(){
+      this.tabs = document.$("header > window-caption");
+    }
+    
+    refreshTabs(objdata){
+      this.tabs.postEvent(new Event("refresh", {data: objdata}));      
+    }
+    
+    ["on close-tape"](evt, el) {
+      const index = evt.data;
+      const  previousTape = Storage.closeIndex(index);
+      this.componentUpdate({currentTape: previousTape, isDirty: !this.isDirty});
+      this.refreshTabs({
+        recent: Storage.recent(),
+        activeId: previousTape.id,
+      });
+    }
+    
+    ["on add-tape"](evt, el) {
+     const newTape = new Storage("");
+      this.componentUpdate({currentTape: newTape});
+      this.refreshTabs({
+        recent: Storage.recent(),
+        activeId: newTape.id,
+      }); 
+    }
+
+    ["on switch-tape"](evt)=>{
+      const id = evt.data;
+      const openTape = Storage.getById(id);
+      this.componentUpdate({currentTape: openTape});
+      this.refreshTabs({ activeId: openTape.id });
+    }
+
+    ["on open-tape"](evt)=>{
+      const id = evt.data;
+      const openTape = Storage.getById(id);
+      this.componentUpdate({currentTape: openTape});
+      this.refreshTabs({
+        recent: Storage.recent(),
+        activeId: openTape.id,
+      });
+    }
+    
+    ["on delete-tape"](evt, el) {
+      const id = evt.data;
+      const openTape = Storage.delete(id);
+      this.componentUpdate({currentTape: openTape, refresh: !this.refresh});
+      this.refreshTabs({
+        recent: Storage.recent(),
+        activeId: openTape.id,
+      });
+    }
+
+    ["on rename-tape"](evt, el) {
+      const {tape, name} = evt.data;
+      Storage.rename(tape, name);
+      this.refreshTabs({
+        recent: Storage.recent(),
+        activeId: tape.id,
+      });
+    }
+    
+    ["on browse-tapes"](evt, el) {
+      this.componentUpdate({browse: !this.browse});      
+    }
+
+    ["on settings-changed"](evt, form){
+      Storage.saveSettings(evt.data);
+      this.componentUpdate({settings: evt.data});
+    }
+    
+    ["on click at :root > section.sidepanel > #close"](evt, el) {
+      this.componentUpdate({browse: !this.browse});      
+    }
+
+    ["on click at :root section.editor > #settings"](evt, el){
+      this.componentUpdate({showSettings: !this.showSettings});
+    }
+
+    render(props,kids){
+      return <body styleset={__DIR__+"main.css#main"}>
+        {
+          this.browse && 
+          <section.sidepanel>
+            <BrowseStorage current={this.currentTape.id} list={Storage.all()}/>
+            <button #close/>
+          </section>
+        }
+        <section.editor>
+          <Editor tape={this.currentTape} settings={this.settings}/>
+          <button #settings/>
+        </section>
+        { this.showSettings && <SettingsForm formData={this.settings}/> }
+      </body>;
+    }
+  }
+  document.$("header > window-caption").patch(<Tabs recent={Storage.recent()} activeId={Storage.lastId()}/>);
+  document.body.patch(<App/>);
+</script>
+</head>
+
+<body>
+</body>
+
+</html>

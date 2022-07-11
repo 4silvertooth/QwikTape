@@ -1,0 +1,115 @@
+@import url(theme.css);
+
+@set editor < theme
+{
+  :root {
+
+    overflow-x: scroll-indicator;
+    overflow-y: hidden;
+    border:1px solid black;
+    background: var(editor-paper); //paper
+    width: 100*;
+    height: max-content;
+    min-height: 100%;
+    min-width: max-content;
+    margin: 24dip 25* 24dip 25*;
+    box-shadow: 0px 2dip 4dip rgba(0,0,0,0.40);     
+
+    font-family: monospace;
+    font-size: 18px;
+    //color: transparent;
+    color: var(editor-text);
+    tab-size: 1;
+
+    padding: 25px;
+    stroke: #d7d7c1;
+    stroke-width: 1px;
+
+    //background lines not sharp
+    //background-size: 100% 1.4em;
+    //background-image: url(path:E M0-0-0-0);
+    //background-repeat: repeat-y;
+
+    background-size: 800px 25px;
+    background-image: url(path:m0 0 800 0m0 -25);
+    background-repeat: repeat;
+    background-attachment: local;
+  }
+
+  text[error=true] {
+    background: var(editor-errors);
+  }
+
+  /*text::highlight(Text) {
+    font-style: italic;
+    color: #636363;
+    font-weight: bold;
+  }*/
+
+  text::highlight(Annotation) {
+    font-style: italic;
+    color: var(editor-annotation); 
+  }
+
+  text::highlight(Equal), 
+  text::highlight(Variable),
+  text::highlight(Identifier), 
+  text::highlight(SuffixIdentifier) { 
+    color: var(editor-variable);
+    text-decoration: none;
+    font-weight: normal;
+  }
+
+  text::highlight(Variable){
+    font-weight: bold;
+  }
+
+  text::highlight(DefinedIdentifier), 
+  text::highlight(UndefinedIdentifier), 
+  text::highlight(Error) { 
+    text-decoration: wavy underline #f00;
+    color: var(editor-errors);
+  }
+
+  text::highlight(NumberLiteral),
+  text::highlight(Operator) {
+    font-style: normal;
+    color: var(editor-number); 
+  }
+
+  text::highlight(ErrorLiteral){
+    color: var(editor-errors);
+  }
+
+  text::highlight(NegetiveLiteral) {
+    font-style: normal;
+    color: var(editor-negation); 
+  }
+
+  text::highlight(Seperator),
+  text::highlight(Result) {
+    color: var(editor-result); 
+  }
+
+  plaintext > text {
+    white-space:pre;
+    height:1.4em;
+    line-height:1.4em;
+    //border-bottom: 1px dashed gray;
+  }
+
+  popup.tooltip {
+    cursor: default;
+    color: #000;
+    width: max-content;
+    max-width: 25em;
+    padding: 10px;
+    margin: 8px 0;
+    background: var(editor-tooltip);
+    border-radius: 0 0 8dip 0;
+    white-space: wrap;
+    word-break: break-all;
+    text-overflow: epsillon;
+    overflow-y: scroll-indicator;
+  }
+}  

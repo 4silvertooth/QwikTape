@@ -1,0 +1,14 @@
+@set theme
+{
+  :root {
+    var(editor-text): #000000;
+    var(editor-number): #0000FF;
+    var(editor-negation): #ff6347;
+    var(editor-annotation): #808080;
+    var(editor-result): #800080;
+    var(editor-variable): #a52a2a;
+    var(editor-tooltip): #fff740;
+    var(editor-errors): #ff0000;
+    var(editor-paper): #fbfbf8;
+  }  
+}

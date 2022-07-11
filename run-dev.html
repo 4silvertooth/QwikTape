@@ -1,0 +1,111 @@
+<html window-frame="extended" window-resizable="true" window-state="maximized">
+
+<head>
+<title>Tape dev</title>
+
+<style>
+  @import url(unit-test/unittest.css);
+  body { flow: horizontal; }
+  body > div#log { width: 25%; height: *; } 
+  body > div#controls > * { width: *; margin: 4dip; }
+  body > div#controls { flow: vertical; } 
+</style>
+
+<link rel="unittest" href="tests/sciter-tape-grammar.tests.js" />
+
+<script|module>
+  import * as sys from "@sys";
+  import * as env from '@env';
+  import * as sciter from '@sciter';
+
+  const app = document.$("frame");
+  const log = document.$("plaintext#tree");
+
+  Window.this.debugMode = false;
+
+  async function saveAndLaunch(path, text){
+    let file;
+    try {
+      file = await sys.fs.open(path, "w+", 0o666);
+      await file.write(text, "utf-8");
+    }
+    catch (error) {
+      Window.modal(<warning>Cannot open file {path} for writing.<br/>{error}<br/>Diagram will not be saved.</warning>);
+    }
+    finally {
+      if (file) {
+        file.close();
+        env.launch(path);
+      }  
+    }    
+  }
+
+  document.on("click", "button#tests", ()=>{
+    document.post(new Event("present-tests", {bubbles: true}));
+  })
+
+  document.on("click", "button#refresh", ()=>{
+    app.frame.loadFile(app.frame.url);
+  })
+  
+  document.on("click", "button#diagram", ()=>{
+    const{default:tape} = sciter.import("./src/parser/tape-embedded.js");
+    const { parser, diagramBuilder } = tape;
+    const sgp = parser.getSerializedGastProductions();
+
+    const htmlText = diagramBuilder(sgp, {
+      resourceBase: `https://cdn.jsdelivr.net/npm/chevrotain/diagrams/`,
+      css: `https://cdn.jsdelivr.net/npm/chevrotain/diagrams/diagrams.css`
+    });
+
+    saveAndLaunch(URL.toPath(__DIR__ + "railroad-diagram.htm"), htmlText);
+  })
+  
+  document.on("click", "button#generate", (evt, checkbox)=>{
+    log.value = "";
+    Window.this.debugMode = checkbox.value;
+    Window.post(new Event("debug-show-parse", { bubbles: true, data: Window.this.debugMode} ));
+  })
+  
+  document.on("click", "button#build", async (evt, el)=>{
+    const pack = sys.spawn([env.home("../packfolder.exe"), "src/", "build/resource.dat", "-binary"]);
+    const spawn = await pack.wait();
+    if (spawn.exitCode != 0) throw `packfolder: failed to produce build/resource.dat file, status=${spawn.exitCode}`;
+    
+    console.log(__DIR__);
+    const build = Window.this.scapp.assembleExe(
+      env.home("scapp.exe"), 
+      "build/resource.dat", 
+      "build/QwikTape.exe", 
+      {
+        icofile: __DIR__ + "src/assets/Icon.ico",
+      }
+    );
+    
+    console.log(build);
+    
+  })
+
+  app.on("log", (evt)=>{
+    log.value = evt.data;
+  })
+  
+</script>
+
+</head>
+
+<body>
+  <frame src="src/main.htm"/>
+  <div#log>
+    <button|checkbox#generate>View Parse</button>
+    <plaintext id='tree'/>
+  </div>  
+  <div#controls>
+    <button#diagram>Diagram</button>
+    <button#refresh>Refresh</button>
+    <button#tests>Tests</button>
+    <button#build>Build</button>
+  <div>  
+</body>
+
+</html>
