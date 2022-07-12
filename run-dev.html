@@ -23,11 +23,11 @@
 
   Window.this.debugMode = false;
 
-  async function saveAndLaunch(path, text){
+  async function saveAndLaunch(path, buffer){
     let file;
     try {
       file = await sys.fs.open(path, "w+", 0o666);
-      await file.write(text, "utf-8");
+      await file.write(buffer, "utf-8");
     }
     catch (error) {
       Window.modal(<warning>Cannot open file {path} for writing.<br/>{error}<br/>Diagram will not be saved.</warning>);
@@ -58,7 +58,7 @@
       css: `https://cdn.jsdelivr.net/npm/chevrotain/diagrams/diagrams.css`
     });
 
-    saveAndLaunch(URL.toPath(__DIR__ + "railroad-diagram.htm"), htmlText);
+    saveAndLaunch(URL.toPath(__DIR__ + "build/railroad-diagram.htm"), htmlText);
   })
   
   document.on("click", "button#generate", (evt, checkbox)=>{
@@ -87,6 +87,13 @@
     );
   })
   
+  document.on("click", "button#screenshot", async (evt, el)=>{
+    const screenshot = new Graphics.Image(app);
+    const buffer = screenshot.toBytes('png', 90);
+    const path = URL.toPath(__DIR__ + "build/main.png");
+    saveAndLaunch(path, buffer);
+  })
+  
   app.on("log", (evt)=>{
     log.value = evt.data;
   })
@@ -105,6 +112,7 @@
     <button#diagram>Diagram</button>
     <button#refresh>Refresh</button>
     <button#tests>Tests</button>
+    <button#screenshot>Screen Shot</button>
     <button#build>Build</button>
   <div>  
 </body>
