@@ -54,4 +54,17 @@
     vertical-align: middle;
   }
   
+  :root > button#close {
+    stroke-width: 1px;
+    foreground-position: 50%;
+    foreground-size: 10dip 10dip;
+
+    border-radius: 2dip;
+    border: none;
+    background: rgba(0,0,0,0.25);
+    cursor: pointer;
+    foreground-image: url(path:m0 0 2-2m0 2-2-2);
+    margin-left: * 0 0 0;
+    cursor: pointer;
+  }
 }

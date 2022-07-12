@@ -8,13 +8,14 @@
   </window-buttons>
 </header>
 <head>
+<script type="module" src="storage/check-instance.js"/>
+
 <title>Tape</title>
 <style src="window.css"/>
 
 <script type="module">
   import { Storage } from "./storage/storage.js";
   import { Tabs, BrowseStorage, Editor, SettingsForm } from "./components/index.js";
-
   class App extends Element {
     currentTape;
     tabs;
@@ -104,7 +105,11 @@
     }
 
     ["on click at :root section.editor > #settings"](evt, el){
-      this.componentUpdate({showSettings: !this.showSettings});
+      this.componentUpdate({showSettings: true});
+    }
+    
+    ["on settings-close"](evt, el){
+      this.componentUpdate({showSettings: false});    
     }
 
     render(props,kids){
@@ -113,12 +118,11 @@
           this.browse && 
           <section.sidepanel>
             <BrowseStorage current={this.currentTape.id} list={Storage.all()}/>
-            <button #close/>
           </section>
         }
         <section.editor>
           <Editor tape={this.currentTape} settings={this.settings}/>
-          <button #settings/>
+          { !this.showSettings && <button #settings/> }
         </section>
         { this.showSettings && <SettingsForm formData={this.settings}/> }
       </body>;

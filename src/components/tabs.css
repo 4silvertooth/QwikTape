@@ -63,29 +63,23 @@
     width: 20dip;
     height: 20dip;
   }
-  
-  :root > button#bookmarks {
+
+  :root > button#bookmarks {    
     width: 60dip;
-    height: 60dip;
+    height: 75dip;
     margin-right: 12dip;
     background: transparent;
-    padding-top: 0.5em;
-    vertical-align: top;
-    //color: white;
-    font-weight: bold;
 
     foreground-position: 50% 50%;
     foreground-image: url(../assets/Icon.svg);
     foreground-size: 22dip 22dip;
 
-    background-size: 60dip 60dip;
-    fill: rgba(0,0,0,0.25);
+    background-size: 60dip 75dip;
+    fill: rgba(255,247,64,0.50);
     stroke-width: 2dip;
     stroke: rgba(0,0,0, 0.10);
-    background-image: url(path:m0 0 0 5 2-1 2 1 0-5);
-
-    //border-radius: 50%;
-    //box-shadow: 0px 2px 4px rgba(0,0,0,0.15);
+    background-image: url(path:M0 0 0 75 30 60 60 75 60 0);
+    overflow: hidden;
   }
 
   :root > button#add {

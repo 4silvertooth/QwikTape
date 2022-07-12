@@ -38,8 +38,7 @@ function migrate(root){
   storage.commit();
 }
 
-
-let storage = DB.open(Env.path("documents") + "/qwiktape.db");
+let storage = DB.open(Env.path("documents") + "/qwiktapes.db");
 let root = storage.root || initDb(storage);
 migrate(root);
 

@@ -97,7 +97,7 @@ export class BrowseStorage extends Element
       <menu.popup>
         <li #rename>Rename</li>
         <li #delete>Delete</li>
-      </menu>     
+      </menu>
     </section>
   }  
 }

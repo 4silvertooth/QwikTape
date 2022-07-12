@@ -22,8 +22,14 @@ export class SettingsForm extends Element
     return true;
   }
   
+  ["on click at :root > button#close"](evt, el){
+    this.postEvent(new Event('settings-close', {bubbles: true}));
+    return true;    
+  }
+  
   render(){
     return <section.settings styleset={__DIR__+"settings.css#settings-form"}>
+      <button#close/>
       <form value={this.formData}>
         <label>Number of decimal digits.</label>
         <input|integer min=0 max=50 step=1 (precision)/>

@@ -23,14 +23,16 @@
   }
 
   /*body > section.sidepanel > button#close {
+    position: relative;
     stroke-width: 1px;
     foreground-position: 50%;
     foreground-size: 10dip 10dip;
-    background:rgba(0,0,0,0.25);
-    border-radius: 50% 50%;
+
+    border-radius: 50%;
+    background: #eee;
+    cursor: pointer;
     foreground-image: url(path:m0 0 2-2m0 2-2-2);
-    margin-left: *;
-    margin-right: 1em;
+    margin: 1em 0.5em 0 *;
     cursor: pointer;
   }*/
 
@@ -45,13 +47,14 @@
     height: 32dip;
     background: 0;
     border: 0;
-    border-radius: 50% 50%;
+    border-radius: 2dip;
     foreground-position: 50%;
     fill: gray;
     foreground-size: 24dip 24dip;
     foreground-image: url(assets/gear.svg);
     margin-left: *;
     margin-right: 1em;
+    margin-top: 1em;
     padding: none;
   }
 }  
