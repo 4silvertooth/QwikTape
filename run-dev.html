@@ -72,20 +72,21 @@
     const spawn = await pack.wait();
     if (spawn.exitCode != 0) throw `packfolder: failed to produce build/resource.dat file, status=${spawn.exitCode}`;
     
-    console.log(__DIR__);
     const build = Window.this.scapp.assembleExe(
       env.home("scapp.exe"), 
       "build/resource.dat", 
       "build/QwikTape.exe", 
       {
-        icofile: __DIR__ + "src/assets/Icon.ico",
+        icofile: __DIR__ + "src/assets/App.ico",
+        productName: 'QwikTape',
+        productVersion: "v0.1",
+        productDescription: "Do calculations, annotate it..",
+        productCopyright: "Viral Ghelani @4silvertooth",
+        productCompany: "TechViral",
       }
     );
-    
-    console.log(build);
-    
   })
-
+  
   app.on("log", (evt)=>{
     log.value = evt.data;
   })

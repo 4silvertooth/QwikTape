@@ -85,7 +85,7 @@ export class Storage {
   
   static closeIndex(index){
     const removed = root.recent.splice(index, 1);
-    storage.commit();
+    //storage.commit();
     if(root.recent.length == 0){
       for(var tape of root.tapeByTimeStamp){
         root.last = tape;
