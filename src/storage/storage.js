@@ -7,7 +7,6 @@ function initDb(storage) {
     version: 1,
     tapeById: storage.createIndex("string", true),
     tapeByTimeStamp: storage.createIndex("date", true),
-    tapeByRecent: storage.createIndex("string", true),
     last: null,
     recent: [],
     settings: {
