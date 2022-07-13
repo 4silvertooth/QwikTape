@@ -1,7 +1,5 @@
 <img src="Logo.png" align="right"
      alt="QwikTape logo by Viral Ghelani" width="144" height="166">
-QwikTape,
-
 Do calculations, annotate it like you would on a paper "qwikly".
 
 ```js
@@ -12,13 +10,10 @@ Do calculations, annotate it like you would on a paper "qwikly".
 ```
 Create unlimited documents called tapes and switch between created tapes easily using browser like tabs.
 
-Start by clicking the `[+]` button to add a new tape. 
-
-
 <img src="build/main-screen.png" width="750">
 
 <br></br>
-Download QwikTape from releases.
+[Download QwikTape](https://github.com/4silvertooth/QwikTape/releases) from releases.
 
 # Features
 
@@ -46,14 +41,14 @@ Download QwikTape from releases.
 # What's in a name?
 QwikTape the name is inspired by [QuickJs](https://github.com/bellard/quickjs) used by [Sciter](https://gitlab.com/sciter-engine/sciter-js-sdk), the engine which powers this application, and [Tape](https://en.wikipedia.org/wiki/Punched_tape) which is what it used to be called for such documents. 
 
-The logo is inspired by the [Rail-Road](build/railroad-diagram.htm) diagram the QwikTape grammar produces and a calculator.
+The logo is inspired by the [Rail-Road](https://htmlpreview.github.io/?https://github.com/4silvertooth/QwikTape/blob/main/build/railroad-diagram.htm) diagram the QwikTape grammar produces and a calculator.
 
 [Chevrotain](https://github.com/Chevrotain/chevrotain) toolkit to build the parser.
 
 Also inspired by [CalcTape](https://calctape.app/), [Numi](https://numi.app/), [Soulver](https://soulver.app/), [Calca](http://calca.io/)
 
 # Limitations
-* Right now QwikTape editor can only recognize number without separators and with `.` as the decimal point, so number like `1,234.00` or `1.234,00` or `1234,00` won't be recognized, some countries use `,` as the decimal seperator which is not supported as of yet.
+* Right now QwikTape editor can only recognize number without separators and with `.` as the decimal point, so number like `1,234.00` or `1.234,00` or `1234,00` won't be recognized, some countries use `,` as the decimal separator which is not supported as of yet.
 * Others which I haven't discovered.
 
 # Coming up.
