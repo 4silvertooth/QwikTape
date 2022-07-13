@@ -52,10 +52,20 @@ Also inspired by [CalcTape](https://calctape.app/), [Numi](https://numi.app/), [
 * Others which I haven't discovered.
 
 # Coming up.
-* Linux binary
-* Mac binary
 * i18n
 * localize number format
+
+# FAQ
+To execute linux binary use this command. 
+```sh 
+sudo chmod +x QwikTape-linux-x64
+``` 
+
+To execute macosx binary use this command. 
+```sh
+sudo chmod +x QwikTape-macosx
+sudo xattr -d com.apple.quarantine QwikTape-macosx
+```
 
 # Developers
 QwikTape uses awesome Sciter SDK for its gui and chevrotain for the parser,
