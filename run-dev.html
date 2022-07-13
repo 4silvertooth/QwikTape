@@ -92,7 +92,7 @@
   document.on("click", "button#screenshot", async (evt, el)=>{
     const screenshot = new Graphics.Image(app);
     const buffer = screenshot.toBytes('png', 90);
-    const path = URL.toPath(__DIR__ + "build/main.png");
+    const path = URL.toPath(__DIR__ + "build/main-screen.png");
     saveAndLaunch(path, buffer);
   })
   

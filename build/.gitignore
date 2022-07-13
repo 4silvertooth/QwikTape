@@ -2,3 +2,5 @@
 *
 # Except this file
 !.gitignore
+!main-screen.png
+!railroad-diagram.htm
