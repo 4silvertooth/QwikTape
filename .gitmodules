@@ -1,3 +1,4 @@
 [submodule "sdk"]
 	path = sdk
 	url = https://gitlab.com/sciter-engine/sciter-js-sdk
+	shallow = true
