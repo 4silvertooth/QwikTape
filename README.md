@@ -15,10 +15,10 @@ Create unlimited documents called tapes and switch between created tapes easily 
 Start by clicking the `[+]` button to add a new tape. 
 
 
-<img src="build/main.png" width="750">
+<img src="build/main-screen.png" width="750">
 
-<br/>
-Start by downloading QwikTape from releases.
+<br></br>
+Download QwikTape from releases.
 
 # Features
 
@@ -84,19 +84,20 @@ Directory structure,
 * `tests` all the tests goes in here
 * `run-dev.html` for developers to debug and support in making changes.
 
-Start by opening [**`run-dev-sciter.bat`**](run-dev-sciter.bat) for windows, it will give you developer view of the application with controls to help you make changes. It launches Sciter `scapp` with [run-dev.html](run-dev.html) in `--debug` mode, use inspector to inspect.
+Start by opening [**`run-dev-sciter.bat`**](run-dev-sciter.bat) for windows, it will give you developer view of the application with controls to help you make changes. It launches `scapp` from sciter-js-sdk with [run-dev.html](run-dev.html) in `--debug` mode. Use inspector to inspect.
 
 Use,
 
-`Diagram` to produce rail-road diagram of the parser grammar.
+* `Diagram` to produce rail-road diagram of the parser grammar.
 
-`Refresh` to refresh the application frame for any changes to css or html.
+* `Refresh` to refresh the application frame for any changes to css or html.
 
-`Tests` to bring up all the tests, run tests from the toolwindow.
+* `Tests` to bring up all the tests, run tests from the toolwindow.
 
-`Screen Shot` to capture the image of the main application. 
+* `Screen Shot` to capture the image of the main application. 
 
-`Build` to produce final builds. (right now just windows)
+* `Build` to produce final builds. (right now just windows)
 
+<br></br>
 I've build all assets like icons and logos inside [`src/assets`](src/assets) in figma and are licensed under [CC](
 https://creativecommons.org/licenses/by/4.0/).
