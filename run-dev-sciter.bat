@@ -1,1 +1,0 @@
-"sdk/bin/windows/x64/scapp.exe" "run-dev.html" "--debug"

@@ -1,10 +1,27 @@
-const {default: tape} = sciter.import("../src/parser/tape-embedded.js");
+const locale = [
+  "1,234,567.89",
+  "1.234.567,89",
+  "1 234 567.89",
+  "1 234 567,89",
+  "12,34,567·89",
+  "12 34 567.89",
+  "1'234'567.89",
+  "1'234'567,89",
+  "1.234.567'89",
+  "1˙234˙567.89",
+  "1˙234˙567,89"
+];
+
+const { BigNum, BigNumEnv }  = sciter.import("../src/parser/bignum.js").withLocale(locale[0]);
+globalThis.BigNum = BigNum;
+globalThis.BigNumEnv = BigNumEnv;
+const { QwikTape } = sciter.import("../src/parser/tape-embedded.js");
 
 function parse(input) {
-  const lex = tape.lexer.tokenize(input);
-  tape.parser.input = lex.tokens;
-  let ast = tape.parser.tape();
-  return {lex: lex, parser: tape.parser, ast: ast}
+  const lex = QwikTape.lexer.tokenize(input);
+  QwikTape.parser.input = lex.tokens;
+  let ast = QwikTape.parser.tape();
+  return {lex: lex, parser: QwikTape.parser, ast: ast}
 }
 
 function any(expected){
@@ -73,7 +90,7 @@ test('expression with unicode operator', () => {
   expect(parse("5 \n× 5").parser.errors).equal([]);
   expect(parse("5 \n× 5").ast).equal([]);
   expect(parse("5 \n× 5\n").ast[0]).contain({
-    type: tape.tokenType.Insert,
+    type: QwikTape.tokenType.Insert,
     value: "25.00", 
     node: any(Object)
   })
@@ -89,7 +106,7 @@ test('result after expression', () => {
   expect(parse("12 \n+ 12\n══\n25").ast).equal([]);
   expect(parse("test = 12\n12\n+          test\n══\n25").ast).equal([]);
   expect(parse("test = 1\n     test\n+          2\n").ast[0]).contain({
-    type: tape.tokenType.Insert,
+    type: QwikTape.tokenType.Insert,
     value: "3.00", 
     node: any(Object)
   });
@@ -101,7 +118,7 @@ test('expression with comments', () => {
   expect(parse("12 \n+ 12\n══\n24 comment").ast).equal([]);
   expect(parse("12\n+ 12\n══\n24 = test").parser.errors).equal([]);
   expect(parse("12 \n+ 12\n══\n24 = test\n+test\n").ast[0]).contain({
-    type: tape.tokenType.Insert,
+    type: QwikTape.tokenType.Insert,
     value: "48.00",          
     node: any(Object)
   });
@@ -112,7 +129,7 @@ test('variables in expression', () => {
   expect(parse("test = 12").ast).equal([]);
   expect(parse("test = 12\ntest\n+12").ast).haveLength(0);
   expect(parse("test = 12\ntest\n+12\n").ast[0]).contain({
-    type: tape.tokenType.Insert,
+    type: QwikTape.tokenType.Insert,
     value: "24.00", 
     node: any(Object)
   });

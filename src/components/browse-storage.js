@@ -86,7 +86,7 @@ export class BrowseStorage extends Element
   render(){
     return <section.files styleset={__DIR__ + "browse-storage.css#browse-storage"}>
       {this.list.map((tape, index)=>{
-        return <div key={tape.id} current={tape.id == this.current} deleting={tape.id == this.deleting}>
+        return <div key={tape.id} current={tape.id == this.current} deleting={tape.id === this.deleting}>
           <div.file>
             <div.content.middle>{tape.text ? tape.text.split(/\r*\n/).slice(-4).join("\n") : "Type Something"}</div>
             <div.context freeze={tape.freeze} index={index} key={tape.id}/>

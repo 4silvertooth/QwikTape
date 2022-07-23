@@ -35,9 +35,16 @@
     background-repeat: repeat;
     background-attachment: local;
   }
-
-  text[error=true] {
-    background: var(editor-errors);
+  
+  :root > text {
+    white-space:pre;
+    height:1.4em;
+    line-height:1.4em;
+  }
+  
+  text[Error] {
+    background: rgba(255, 0, 0, 7%);
+    text-selection-caret-color: color(selection-nf-text);
   }
 
   /*text::highlight(Text) {
@@ -91,13 +98,6 @@
     color: var(editor-result); 
   }
 
-  plaintext > text {
-    white-space:pre;
-    height:1.4em;
-    line-height:1.4em;
-    //border-bottom: 1px dashed gray;
-  }
-
   popup.tooltip {
     cursor: default;
     color: #000;
@@ -106,8 +106,8 @@
     padding: 10px;
     margin: 8px 0;
     background: var(editor-tooltip);
-    border-radius: 0 0 8dip 0;
-    white-space: wrap;
+    border-radius: 0 8dip 8dip 8dip;
+    white-space: pre-wrap;
     word-break: break-all;
     text-overflow: epsillon;
     overflow-y: scroll-indicator;

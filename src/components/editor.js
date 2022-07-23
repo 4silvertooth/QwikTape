@@ -1,8 +1,7 @@
-import { default as tape } from "../parser/tape-embedded.js";
-const { lexer, parser, tokenType, tokenMatcher, ERR } = tape;
+import { QwikTape } from "../parser/tape-embedded.js";
+const { lexer, parser, tokenType, tokenMatcher, ERR } = QwikTape;
 
 export class Editor extends Element {
-  editor;
   ast;
   lex;
   tape;
@@ -67,22 +66,41 @@ export class Editor extends Element {
 
     const startNode = this.children[startLine-1]?.firstChild;
     if(!startNode) return;
-    if(!startNode.parentElement.hasAttribute('error') && markType.includes('Error')){
+
+    if(markType.includes('ClearMark')){
+      if(token.node){
+        const clearNodeRange = new Range();
+        clearNodeRange.setStart(startNode, startColumn);
+        clearNodeRange.setEnd(startNode, token.node.endColumn);
+        if(clearNodeRange.marks().includes('Error')){
+          clearNodeRange.clearMark('Error');
+        }
+      }
+      return;
+    }
+
+    if(markType.includes('Error')){
       if(token.node){
         endLine = token.node.startLine;
         endColumn = token.node.startColumn;
       }
-      //startNode.parentElement.setAttribute('error', true);
     }
-    /*else {
-      startNode.parentElement.removeAttribute('error');
-    }*/
+
     const range = new Range();      
     const endNode = this.children[endLine-1].firstChild;
     range.setStart(startNode, startColumn-1);
     range.setEnd(endNode, endColumn);
     range.clearMark(range.marks());
     range.highlight(markType);
+    
+    range.setStart(startNode, 0);
+    range.setEnd(startNode, startNode.textContent.length);
+    if(range.marks().includes('Error')){
+      startNode.parentElement.setAttribute('Error', true);
+    }
+    else if(startNode.parentElement.hasAttribute('Error')){
+      startNode.parentElement.removeAttribute('Error');
+    }
   }
   
   insertNewLineBefore(token){
@@ -110,6 +128,8 @@ export class Editor extends Element {
   //between new line token, not counting white space
 
   evalTokens(tokens){
+    //this.evalTokensText();
+    //return;
     let [caretLine, offset] = this.plaintext.selectionStart;
     const lastIndex = tokens.findIndex((token)=>{
       let lineEditable = caretLine !== token.startLine-1; //|| token.startColumn > offset
@@ -152,7 +172,7 @@ export class Editor extends Element {
   
   replace(lineNode, fromPos, toPos, padding, withText){
     let prefix, text, suffix;
-    padding = padding < 0 ? 0 : padding;
+    padding = Math.max(0, padding);
     prefix = lineNode.textContent.substring(0, fromPos);
     text = ' '.repeat(padding) + withText;
     suffix = lineNode.textContent.substring(toPos, lineNode.textContent.length);
@@ -165,8 +185,8 @@ export class Editor extends Element {
     const startColumn = token.startColumn-1;
     const fromPos = startColumn - token.ws;
     const toPos = value ? token.endColumn : startColumn;
-    this.clearMark(lineNode, fromPos, toPos + (value ? value.length : 0) );
-    const text = this.replace(lineNode, fromPos, toPos, token.ws + (token.padding||0), value ? value : '');
+    this.clearMark(lineNode, fromPos, toPos + (value?.length ?? 0) );
+    const text = this.replace(lineNode, fromPos, toPos, token.ws + ( token.padding || 0 ), value ?? '');
     this.plaintext.update( (transact)=>{
       transact.setText(lineNode, text);
       return true;
@@ -195,7 +215,7 @@ export class Editor extends Element {
     if(!fromTokens) return;
     let [caretLine, caretColumn] = caret ?? this.plaintext.selectionStart;
     caretLine += 1;
-    //const result = fromTokens.filter((token)=>token[type] == tokenType);
+
     return fromTokens.find((token)=>{
       const node = token.node ?? token;
       if(caretLine >= node.startLine && caretLine <= node.endLine ){
@@ -214,7 +234,6 @@ export class Editor extends Element {
   }
 
   insertResult(token){
-    //const editor =  this.editor;
     let { value, node, padding } = token;
     const decimalPosition = /\./g.exec(value)?.index;
     const text = printf("%*s",padding, value);
@@ -253,6 +272,8 @@ export class Editor extends Element {
     //will be last mark even on blank space after mark
     const range = this.rangeFromPoint(evt.x, evt.y);
     if( !range ) return;
+    //todo: negation Variable are filterd, 
+    //as the token changes to NegetiveLiteral 
     const requiredNode = range.marks()
       .filter((key)=>["Error", "Identifier", "Variable"].includes(key))
       .length;
@@ -308,6 +329,7 @@ export class Editor extends Element {
     }
 
     if(evt.code === 'Backspace' || evt.code === 'Delete'){
+      if(this.plaintext.selectionText) return;
       const blocks = this.filterTokens(this.lex.tokens, tokenType.Block)
       let token = this.getTokenUnderCaret(blocks);
       if(token){
@@ -315,7 +337,6 @@ export class Editor extends Element {
         return true;
       }
     }
-    if(evt.shiftKey) return;
   }
 
   // evt.reason
@@ -329,8 +350,7 @@ export class Editor extends Element {
   
   ["on ^change at :root"](evt, editor){
     if(evt.reason == 4) return;
-    
-    if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator === 'true') {
+    if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator == true) {
       let [line, offset] = editor.plaintext.selectionStart;
       const textNode = editor.children[line]?.firstChild;      
       const op = textNode.textContent.charAt(offset-1);
@@ -355,7 +375,13 @@ export class Editor extends Element {
         //this.mark(error.previousToken, ['Error']);
         return;
       }
-      Object.assign(error.token, {tooltip: error});
+      try {
+        Object.assign(error.token, {tooltip: error});
+      }
+      catch(e){
+        //todo: sometimes the object is not extensible
+        console.log(e);
+      }
       this.mark(error.token, ['Error']);
     })
     

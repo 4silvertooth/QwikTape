@@ -1,1 +1,0 @@
-sdk/bin/macosx/scapp run-dev.html --debug

@@ -8,14 +8,42 @@
   </window-buttons>
 </header>
 <head>
-<script type="module" src="storage/check-instance.js"/>
 
-<title>Tape</title>
+<script type="module" src="storage/check-instance.js"/>
+<script type="module">
+  import * as sciter from "@sciter";
+  import { PLATFORM } from "@env";
+  Window.this.mediaVars({platform: PLATFORM});
+
+  /*const supportedLocale = [
+    "1234567.89",
+    "1234567,89",
+    "1,234,567.89",
+    "1.234.567,89",
+    "1 234 567.89",
+    "1 234 567,89",
+    "12,34,567·89",
+    "12 34 567.89",
+    "1'234'567.89",
+    "1'234'567,89",
+    "1.234.567'89",
+    "1˙234˙567.89",
+    "1˙234˙567,89"
+  ];*/
+
+  globalThis.locale = 1234567.89.toLocaleString();
+  const { BigNum, BigNumEnv }  = sciter.import("./parser/bignum.js").withLocale(globalThis.locale);
+  globalThis.BigNum = BigNum;
+  globalThis.BigNumEnv = BigNumEnv;
+</script>
+
+<title>QwikTape</title>
 <style src="window.css"/>
 
 <script type="module">
   import { Storage } from "./storage/storage.js";
   import { Tabs, BrowseStorage, Editor, SettingsForm } from "./components/index.js";
+
   class App extends Element {
     currentTape;
     tabs;
@@ -24,8 +52,8 @@
     constructor(props) {
       super();
       this.currentTape = Storage.currentTape();
-      this.settings = Storage.getSettings() ?? {precision: 2, padding: 10};
-      //this.settings = {precision: 2, padding: 10};
+      this.settings = Storage.getSettings() ?? {decimalDigits: 2, padding: 12};
+      globalThis.BigNumEnv.setDecimalDigits(this.settings.decimalDigits);
     }
     
     componentDidMount(){
@@ -39,7 +67,7 @@
     ["on close-tape"](evt, el) {
       const index = evt.data;
       const  previousTape = Storage.closeIndex(index);
-      this.componentUpdate({currentTape: previousTape, isDirty: !this.isDirty});
+      this.componentUpdate({currentTape: previousTape});
       this.refreshTabs({
         recent: Storage.recent(),
         activeId: previousTape.id,
@@ -75,7 +103,7 @@
     ["on delete-tape"](evt, el) {
       const id = evt.data;
       const openTape = Storage.delete(id);
-      this.componentUpdate({currentTape: openTape, refresh: !this.refresh});
+      this.componentUpdate({currentTape: openTape});
       this.refreshTabs({
         recent: Storage.recent(),
         activeId: openTape.id,
@@ -96,6 +124,7 @@
     }
 
     ["on settings-changed"](evt, form){
+      globalThis.BigNumEnv.setDecimalDigits(evt.data.decimalDigits)
       Storage.saveSettings(evt.data);
       this.componentUpdate({settings: evt.data});
     }
@@ -128,6 +157,7 @@
       </body>;
     }
   }
+
   document.$("header > window-caption").patch(<Tabs recent={Storage.recent()} activeId={Storage.lastId()}/>);
   document.body.patch(<App/>);
 </script>

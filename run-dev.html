@@ -1,7 +1,7 @@
 <html window-frame="extended" window-resizable="true" window-state="maximized">
 
 <head>
-<title>Tape dev</title>
+<title>QwikTape Dev</title>
 
 <style>
   @import url(unit-test/unittest.css);
@@ -30,7 +30,7 @@
       await file.write(buffer, "utf-8");
     }
     catch (error) {
-      Window.modal(<warning>Cannot open file {path} for writing.<br/>{error}<br/>Diagram will not be saved.</warning>);
+      Window.modal(<warning>Cannot open file {path} for writing.<br/>{error}<br/>File will not be saved.</warning>);
     }
     finally {
       if (file) {
@@ -49,8 +49,8 @@
   })
   
   document.on("click", "button#diagram", ()=>{
-    const{default:tape} = sciter.import("./src/parser/tape-embedded.js");
-    const { parser, diagramBuilder } = tape;
+    const { QwikTape } = sciter.import("./src/parser/tape-embedded.js");
+    const { parser, diagramBuilder } = QwikTape;
     const sgp = parser.getSerializedGastProductions();
 
     const htmlText = diagramBuilder(sgp, {

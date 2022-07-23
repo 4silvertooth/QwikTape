@@ -8,6 +8,7 @@
     //border-radius: 5dip;
     height: 20dip;
     width: *;
+    cursor: text;
   }
 
   :root > knob {
@@ -27,7 +28,7 @@
   :root {
     margin: 12dip;
     border: 1px solid black;
-    size: 160dip 160dip;
+    size: 200dip 200dip;
     margin: 0;
     padding: none;
     var(hue-color): 0;

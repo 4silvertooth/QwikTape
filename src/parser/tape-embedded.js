@@ -2,34 +2,34 @@ import { default as chevrotain } from "../chevrotain/chevrotain.min.js";
 
 "use strict";
 "use math";
-// ----------------- lexer -----------------
 
-const BigNum = BigDecimal || parseFloat;
-const BigNumEnv = BigFloatEnv || {prec: 115};
-//const BigNum = parseFloat;
-//const BigNumEnv = {prec: 115};
+// ----------------- lexer -----------------
+const BigNum = globalThis.BigNum;
+const BigNumEnv = globalThis.BigNumEnv;
 const CstParser = chevrotain.CstParser;
-//const BaseParser = CstParser;
 const createToken = chevrotain.createToken;
 const Lexer = chevrotain.Lexer;
 const EmbeddedActionsParser = chevrotain.EmbeddedActionsParser;
 const BaseParser = EmbeddedActionsParser;
+//const BaseParser = CstParser;
 const tokenMatcher = chevrotain.tokenMatcher;
 
-const chars = [...'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ']
+const chars = [...'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'];
 const Operator = createToken({name: "Operator", pattern: Lexer.NA});
-const EOF = chevrotain.EOF
+const EOF = chevrotain.EOF;
 const Sums = createToken({name: "Sums", pattern: Lexer.NA});
 const Plus = createToken({ name: "Plus", pattern: /\+/, categories: [Sums, Operator] });
 const Products = createToken({name: "Products", pattern: Lexer.NA});
 const Mult = createToken({ name: "Mult", pattern: /[\*×]/, categories: [Products, Operator] });
 const Div = createToken({ name: "Div", pattern: /[\/÷]/, categories: [Products, Operator] });
-const NewLine = createToken({ name: "NewLine",  pattern: /\r?\n/})
-const LParen = createToken({ name: "LParen", pattern: /\(/ })
-const RParen = createToken({ name: "RParen", pattern: /\)/ })
-const Pow = createToken({ name: "Power", pattern: /\^/, categories: [Operator] })
+const NewLine = createToken({ name: "NewLine",  pattern: /\r?\n/});
+const LParen = createToken({ name: "LParen", pattern: /\(/ });
+const RParen = createToken({ name: "RParen", pattern: /\)/ });
+const Pow = createToken({ name: "Power", pattern: /\^/, categories: [Operator] });
 
 const TokenType = {NewLine: NewLine, Block: 1, Insert: 2, Tooltip: 3};
+
+//not using ; in the parser code below to reduce noise
 
 const Minus = createToken({ 
   name: "Minus", 
@@ -52,44 +52,40 @@ const NumberLiteral = createToken({
 })
 
 //parse number and calculate its decimal places and formatting
-const regexpNumberLiteral = /-?\d+(\.\d*)?|-?(\.\d+)/y
+//let regexpNumberLiteral = /-?\d+(\.\d*)?|-?(\.\d+)/y
+let regexpNumberLiteral = BigNumEnv.getNumeralMatcher()
 function matchNumberLiteral(text, offset, lexedTokens){
-
   let lastToken = lexedTokens[lexedTokens.length-1]
-  //todo: check for alternative regex for this
   if(lastToken && tokenMatcher(lastToken, NumberLiteral)) {
     return null
-  }  
-
+  }
   regexpNumberLiteral.lastIndex = offset
   const match = regexpNumberLiteral.exec(text)
-  if(match == null) return match
+  
+  if(!match) return null
+  
   try {
-    BigNum(match[0]);
+    const value = BigNum.parseString(match[0])
+    const mantissa = match[1] ?? match[2] ?? "0"
+    match.payload = {
+      parse: value, //can't view in debug-view, JSON.Stringify will remove this
+      formatted: match[1] ? true : false,
+      decimalDigits: mantissa.length-1,
+      decimalPosition: match[0].length - (match[2] ? 1 : (match[1]?.length ?? 0)),
+    }
   }
   catch(e){
-    return null;
+    return null
   }
-  const mantissa = match[1] ?? match[2] ?? "0"
-  //todo: benchmark if this is faster
-  //decimalPosition: match[0].indexOf('.') < 0 ? match[0].length : match[0].indexOf('.'),
-  match.payload = {
-    formatted: match[1] ? true : false,
-    precision: mantissa.length-1,
-    decimalPosition: match[0].length - (match[2] ? 1 : (match[1]?.length ?? 0)),
-  }
-  
   return match
 }
 
 const Percentage = createToken({ 
   name: "Percentage",
-  //pattern: /(?<=\w)%/,
-  //pattern: /(?<=\w)%(?:[ \t]*═(-?\d+(?:\.\d*)?))?/,
   pattern: matchPercentage,
   line_breaks: false,
   start_chars_hint: ["%"],
-});
+})
 
 const regexpPercentage = /(?<=\w)%(?:[ \t]*[⥱├\|][ \t]*(-?\d+(?:\.\d*)?))?/y
 function matchPercentage(text, offset){
@@ -99,13 +95,14 @@ function matchPercentage(text, offset){
   return match
 }
 
+//not used
 const Infinite = createToken({
   name: "Infinite",
   pattern: /Infinity/,
 })
 
 //don't remove \r from second match
-//todo: check for behavior on linux and mac
+//todo: check for behavior on browser
 const Annotation = createToken({
   name: "Annotation",
   pattern: /(?<=[a-zA-Z]\w*[ \t]*=.*)[^\n]+|(?<=[\w\d]+%?[ \t]*)[^\)\+\-\*×\/\÷\r]+/,
@@ -137,17 +134,13 @@ const Identifier = createToken({
   line_breaks: false,
 })
 
+//todo: benchmark if creating new regex is faster than iterate all tokens for a variable 
 const regexpDefinedIdentifier = /(?<=\r?\n *)[a-zA-Z]\w*(?=.*(\r?\n)?[-\+\*×\/÷\^])/y
 function matchDefinedIdentifier(text, offset, lexedTokens){
   regexpDefinedIdentifier.lastIndex = offset
   const match = regexpDefinedIdentifier.exec(text)
   if(!match) return match
-  //todo: benchmark if this is fast 
-  //vs predefined regex to find array of variable and iterate it 
-  const findDefinedVariable = "^[ \\t]*" + match[0] +
-    "[ \\t]*=|^[ \\t]*-?\\d+\\.?\\d*[ \\t]*=[ \\t]*" + match[0] + "\\s"
-
-  const definedVariable = new RegExp(findDefinedVariable, "gm")
+  const definedVariable = new RegExp(`^[ \\t]*${match[0]}[ \\t]*=|^[ \\t]*${regexpNumberLiteral.source}[ \\t]*=[ \\t]*${match[0]}\\s`, "gm")
   const variable = definedVariable.test(text.substring(0, offset))
   if(!variable) return null
   return match
@@ -165,7 +158,7 @@ const Equal = createToken({
   pattern: /(?<=[a-zA-Z]\w*[ \t]*)=/,
   line_breaks: false,
   start_chars_hint: ['='],
-});
+})
 
 //an equal present after result seperator
 const ResultEqual = createToken({
@@ -173,7 +166,7 @@ const ResultEqual = createToken({
   pattern: /(?<=═\s?\n.*)=/,
   line_breaks: false,
   start_chars_hint: ['='],
-});
+})
 
 const SuffixIdentifier = createToken({
   name: "SuffixIdentifier",
@@ -193,7 +186,7 @@ RParen.LABEL = ")";
 Pow.LABEL = "^";
 Minus.LABEL = "-";
 Percentage.LABEL = "'%' ⥱ value?";
-DefinedIdentifier.LABEL = "Defined Identifier"
+DefinedIdentifier.LABEL = "Defined Identifier";
 
 const tokens = [
   WhiteSpace, Seperator, NewLine,
@@ -218,7 +211,8 @@ const TapeLexer = new Lexer(tokens, {
 class TapeParser extends BaseParser {
 
   _vars = {}
-
+  minPad = 1
+  
   constructor() {
     super(tokens, {
       maxLookahead: 2,
@@ -230,7 +224,7 @@ class TapeParser extends BaseParser {
     })
     const $ = this
 
-    this.RULE("tape", (objectArgs={precision: 2, padding: 10})=>{
+    this.RULE("tape", (objectArgs={decimalDigits: 2, padding: 10})=>{
       this._vars = {}
       let tape = []
       let row
@@ -260,40 +254,72 @@ class TapeParser extends BaseParser {
       //$.OR2([{ALT: ()=>$.CONSUME(NewLine)},{ALT: ()=>$.CONSUME(EOF)}])
       return row
     })
-    
+
     const format = (tokens, padding)=>{
-      let minPad = 1
       return $.ACTION(()=>{
         let lastToken = tokens[tokens.length-1]
         if(lastToken){
-          const { startColumn, ws, payload } = lastToken
-          if(startColumn - ws + payload.decimalPosition > padding) {
-            padding = startColumn - ws + payload.decimalPosition + minPad
+          if(tokenMatcher(lastToken, NumberLiteral)){
+            const { startColumn, ws, payload } = lastToken
+            if(startColumn - ws + payload.decimalPosition > padding) {
+              const startOffset = startColumn - ws
+              padding = startOffset + payload.decimalPosition + this.minPad
+            }
+          }
+          else { //either Identifier or DefinedIdentifier
+            const { startColumn, ws } = lastToken
+            if(startColumn - ws + this.decimalPosition > padding) {
+              const startOffset = startColumn - ws
+              padding = startOffset + token.image.length - this.decimalDigits - 1 + this.minPad
+            }
           }
         }
+        
+        //group of token inside expression
         tokens.forEach((token)=>{
           if(!token) return
-          //const formating = {}
+          if(!tokenMatcher(token, NumberLiteral)){
+            const { startColumn, payload } = token
+            const desiredPadding = padding - (startColumn + token.image.length - this.decimalDigits - 1)
+            if(token.padding != desiredPadding){
+              Object.assign(token, {
+                padding: desiredPadding
+              })
+            }
+            return
+          }
+          //token is now NumberLiteral
           const { startColumn, payload } = token
-          let pad = padding - (startColumn + payload.decimalPosition)
-          if(token.padding != pad){
-            Object.assign(token, {padding: pad})
+          const localeString = payload.parse.toLocaleString(payload.decimalDigits)
+          const localeDecimalPosition = localeString.length - Math.max(payload.decimalDigits, this.decimalDigits)
+          const desiredPadding = padding + this.minPad - (startColumn + localeDecimalPosition)
+          // const desiredPadding = padding - (startColumn + payload.decimalPosition)
+
+          if(token.padding != desiredPadding){
+            Object.assign(token, {
+              padding: desiredPadding
+            })
           }
-          
-          if(tokenMatcher(token, Identifier) || tokenMatcher(token, DefinedIdentifier)) return
-          if(payload.precision == this.precision) return
-          if(payload.formatted && payload.precision > this.precision){
-            //don't format it if fromatting will change token's value
-            const fixedPayload = BigNum(token.image).toFixed(payload.precision);
-            const fixedPrecision = BigNum(token.image).toFixed(this.precision);
-            if(BigNum(fixedPayload) != BigNum(fixedPrecision)) return;
+
+          if(payload.formatted && payload.decimalDigits > this.decimalDigits){ //trim unwanted zeros behind
+            if(token.value.canTrimZeros(payload.decimalDigits)){
+              Object.assign(token, {
+                formatting: payload.parse.toLocaleString()
+              })
+              return
+            }
           }
-          Object.assign(token, {formatting: BigNum(token.image).toFixed(this.precision)})
+
+          if(token.image !== localeString) {
+            Object.assign(token, {
+              formatting: localeString
+            })
+          }
         })
         return padding
       })
     }
-    
+
     const evaluate = (x, operator, y)=>{
       return $.ACTION(()=>{
         if (tokenMatcher(operator, Plus)) {
@@ -324,7 +350,7 @@ class TapeParser extends BaseParser {
                 return x
               }
               catch(err){
-                e = err;
+                e = err
               }
             }
 
@@ -397,7 +423,7 @@ class TapeParser extends BaseParser {
                 return x
               }
               catch(err){
-                e = err;
+                e = err
               }
             }
 
@@ -428,10 +454,10 @@ class TapeParser extends BaseParser {
       
       const { value, seperator } = postfix.payload
       if( value === null ||
-          value !==  BigNum(_y).toFixed(this.precision) //string comparison
+          value !==  BigNum(_y).toFixedDecimal() //string comparison
       ){
         Object.assign(postfix, {
-          formatting: "%" + seperator + BigNum(_y).toFixed(this.precision),
+          formatting: "%" + seperator + BigNum(_y).toFixedDecimal(),
           ws: 0,
           padding: 0,
         })
@@ -463,7 +489,7 @@ class TapeParser extends BaseParser {
               rhs = $.SUBRULE($.quark)
               postfix = $.SUBRULE($.postfix)
             if(rhs){
-              let last = tokens[tokens.length-1];
+              let last = tokens[tokens.length-1]
               if(last.startLine != rhs.startLine) {
                 tokens.push(rhs)
                 padding = format(tokens, padding)
@@ -496,13 +522,17 @@ class TapeParser extends BaseParser {
         DEF: ()=>{
           let nl = $.CONSUME(NewLine)
       	  return $.ACTION(()=>{
-            const value = BigNum(lhs.value);
+            const value = lhs.value.toLocaleString()
+            const length = value.length - this.decimalDigits + 1
+            if(padding < length){
+              padding = length + this.minPad
+              padding = format(tokens, padding)
+            }
             return {
               type: TokenType.Insert,
-              value: value.toFixed(this.precision),
-              padding: padding + this.precision,
+              value: value.toLocaleString(),
+              padding: padding + this.decimalDigits,
               node: nl,
-              //style: BigNum.isFinite(value) ? lhs.tokenType.name : 'Error',
             }
           })
         }
@@ -555,7 +585,7 @@ class TapeParser extends BaseParser {
         }
         else {
           this._vars[key] = value
-          Object.assign(variable, {tooltip: BigNum(value).toFixed(this.precision)})
+          Object.assign(variable, {tooltip: BigNum(value).toFixedDecimal()})
         }
         //not required in ast
         //return { [key]: value.toString() }
@@ -640,7 +670,8 @@ class TapeParser extends BaseParser {
         const node = {
           startLine: lparen.startLine, startColumn: lparen.startColumn, 
           endLine:   rparen.endLine,   endColumn:rparen.endColumn,
-        }        
+        }
+        Object.assign(lparen, {style: ['ClearMark'], node: rparen})
         Object.assign(rparen, {value: exp, node: node})
         return rparen
       })
@@ -666,8 +697,8 @@ class TapeParser extends BaseParser {
                 Object.assign(identifier, {style: ['Error'], tooltip: 'Already defined.'})
               }
               else if(
-                BigNum(lhsValue).toFixed(this.precision) !== 
-                BigNum(number.value).toFixed(this.precision)
+                lhsValue.toFixedDecimal() !== 
+                number.value.toFixedDecimal()
               ){
                 this._vars[key] = lhsValue
               }
@@ -686,9 +717,10 @@ class TapeParser extends BaseParser {
           startLine: nl.startLine,     startColumn: nl.startColumn, 
           endLine:   number.endLine,   endColumn:number.endColumn,
         }
-        if(BigNum(lhsValue).toFixed(this.precision) !== BigNum(number.value).toFixed(this.precision)){
+        //string comparison
+        if(lhsValue.toLocaleString() !== number.value.toLocaleString()){
           Object.assign(number, {
-            formatting: BigNum(lhsValue).toFixed(this.precision), 
+            formatting: lhsValue.toLocaleString(), 
             style: 'Result',
           })
         }
@@ -696,8 +728,8 @@ class TapeParser extends BaseParser {
           if(seperator.endColumn != number.endColumn){
               Object.assign(seperator, {
               formatting: '═'.repeat(number.endColumn),
-              padding: 0,
-              ws: 0,
+              padding: -seperator.startColumn,
+              ws: seperator.startColumn,
               style: 'Result',
             })
           }
@@ -740,11 +772,6 @@ class TapeParser extends BaseParser {
         }
 
         Object.assign(identifier, {
-          payload: { 
-            decimalPosition: key.length-this.precision-1, 
-            formatted: true,
-            precision: this.precision,
-          },
           ws: ws-1,
         })
 
@@ -754,7 +781,7 @@ class TapeParser extends BaseParser {
             value: value,
             defined: true,
             style: negetive ? ['NegetiveLiteral']: [identifier.tokenType.name],
-            tooltip: BigNum(value).toFixed(this.precision),
+            tooltip: BigNum(value).toFixedDecimal(),
           })
         }  
         else {
@@ -789,7 +816,8 @@ class TapeParser extends BaseParser {
           let lines = number.startLine - lastToken.endLine
           ws = ws - (lines == 0 ? lastToken.endColumn : 0) 
         }
-        const value = negetive ? -BigNum(number.image) : BigNum(number.image)
+        //const value = negetive ? -BigNum(number.image) : BigNum(number.image)
+        const value = negetive ? -number.payload.parse : number.payload.parse
         Object.assign(number, {
           value: value,
           style: value < 0 ? ['NegetiveLiteral'] : [number.tokenType.name], 
@@ -807,7 +835,7 @@ class TapeParser extends BaseParser {
 // reuse the same parser instance.
 const parser = new TapeParser([])
 
-export default {
+export const QwikTape = {
   defaultRule: 'tape',
   lexer: TapeLexer,
   parser: parser,
