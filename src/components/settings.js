@@ -1,4 +1,4 @@
-import { Color } from "color-picker.js"
+import { Theme } from "theme.js"
 
 export class SettingsForm extends Element
 {
@@ -42,22 +42,8 @@ export class SettingsForm extends Element
           <option as='integer' value={true}>YES</option>
           <option as='integer' value={false}>NO</option>
         </select>
-        {/*<label>Number format?</label>
-        <select (numeralFormat)>
-          <option>1,234,567.89</option>
-          <option>12,34,567.89</option>
-        </select>*/}
-        <label>Editor colorization.</label>
-        <div (colors)>
-          <Color (editor-text)>Text</Color>
-          <Color (editor-number)>Numbers</Color>
-          <Color (editor-negation)>Negetive Numbers</Color>
-          <Color (editor-annotation)>Annotations</Color>
-          <Color (editor-variable)>Variables</Color>
-          <Color (editor-result)>Results</Color>
-          <Color (editor-tooltip)>Info Bubble</Color>
-          <Color (editor-paper)>Paper</Color>
-        </div>  
+        <label>Editor color theme.</label>
+        <Theme (colors)/>
       </form>
     </section>
   }

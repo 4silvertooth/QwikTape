@@ -66,7 +66,7 @@ export class BrowseStorage extends Element
     this.componentUpdate({deleting: key});
     let reply = Window.this.modal(
       <alert caption={this.list[index].name}>
-        <content>Deleting this document?</content>
+        <content>Deleting {this.list[index].name}?</content>
         <buttons>
            <button id="yes" role="default-button" accesskey="!KeyY">Yes</button>
            <button id="no" role="cancel-button" accesskey="!KeyN">No</button>

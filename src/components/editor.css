@@ -3,7 +3,6 @@
 @set editor < theme
 {
   :root {
-
     overflow-x: scroll-indicator;
     overflow-y: hidden;
     border:1px solid black;
@@ -22,7 +21,8 @@
     tab-size: 1;
 
     padding: 25px;
-    stroke: #d7d7c1;
+    //stroke: #d7d7c1;
+    stroke: rgba(215, 215, 193, 50%);
     stroke-width: 1px;
 
     //background lines not sharp
@@ -43,8 +43,9 @@
   }
   
   text[Error] {
-    background: rgba(255, 0, 0, 7%);
-    text-selection-caret-color: color(selection-nf-text);
+    background: rgba(255, 0, 0, 10%);
+    //can't see caret without this
+    text-selection-caret-color: currentcolor;
   }
 
   /*text::highlight(Text) {

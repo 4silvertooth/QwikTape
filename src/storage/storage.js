@@ -223,6 +223,10 @@ export class Storage {
   static getSettings(){
     return root.settings;
   }
+  
+  static getTheme(){
+    return root.settings.colors;
+  }
 
   static saveSettings(value){
     function save(source, target){

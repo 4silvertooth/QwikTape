@@ -12,3 +12,48 @@
     var(editor-paper): #fbfbf8;
   }  
 }
+
+@set controls
+{
+  :root {
+    flow: vertical;
+    behavior: form;
+    border-radius: 4dip;
+    overflow: hidden;
+    margin-top: 0.5em;
+  }
+  
+  :root > section {
+    margin-bottom: 0.5em;
+  }
+  
+  :root > section > button {
+    foreground-position: 50%;
+    foreground-size: 24dip 24dip;
+    cursor: pointer;
+  }
+
+  :root > section > button:disabled {
+    fill: #7e7e7e;
+  }
+  
+  :root > section > button#previous {
+    foreground-image: url(../assets/prev-arrow.svg);
+  }
+
+  :root > section > button#next {
+    foreground-image: url(../assets/next-arrow.svg);
+    margin-right: *;
+    margin-left: 1em;
+  }
+
+  :root > div {
+    padding-left: 1em;
+    width: *;
+    height: 2.2em;
+    color: #fbfbf8;
+    box-shadow: inset 0px 5px 7px 0px rgba(0,0,0, 0.60);
+    cursor: pointer;
+    vertical-align: middle;
+  }
+}
