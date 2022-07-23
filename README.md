@@ -64,7 +64,6 @@ Also inspired by [CalcTape](https://calctape.app/), [Numi](https://numi.app/), [
 
 # Coming up.
 * i18n
-* Themes
 * Printing support
 * PDF export
 
