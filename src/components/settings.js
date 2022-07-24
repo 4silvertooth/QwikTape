@@ -39,8 +39,8 @@ export class SettingsForm extends Element
 
         <label>Replace operator / and * with ÷ and × in editor?</label>
         <select (replaceOperator)>
-          <option as='integer' value={true}>YES</option>
-          <option as='integer' value={false}>NO</option>
+          <option as={'auto'} value={true}>YES</option>
+          <option as={'auto'} value={false}>NO</option>
         </select>
         <label>Editor color theme.</label>
         <Theme (colors)/>

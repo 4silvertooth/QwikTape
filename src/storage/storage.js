@@ -18,7 +18,7 @@ function initDb(storage) {
       'locale': locale,
       'decimalDigits': 2,
       'padding': 12,
-      'replaceOperator': true,
+      'replaceOperator': 'true',
       'colors': {
         'editor-text': '#000000',
         'editor-number': '#0000FF',
