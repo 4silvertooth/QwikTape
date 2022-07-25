@@ -38,9 +38,9 @@ export class SettingsForm extends Element
         <input|integer min=0 max=30 step=1 (padding)/>
 
         <label>Replace operator / and * with ÷ and × in editor?</label>
-        <select (replaceOperator)>
-          <option as={'auto'} value={true}>YES</option>
-          <option as={'auto'} value={false}>NO</option>
+        <select as='auto' (replaceOperator)>
+          <option value={true}>YES</option>
+          <option value={false}>NO</option>
         </select>
         <label>Editor color theme.</label>
         <Theme (colors)/>

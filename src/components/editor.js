@@ -350,7 +350,7 @@ export class Editor extends Element {
   
   ["on ^change at :root"](evt, editor){
     if(evt.reason == 4) return;
-    if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator === 'true') {
+    if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator == true) {
       let [line, offset] = editor.plaintext.selectionStart;
       const textNode = editor.children[line]?.firstChild;      
       const op = textNode.textContent.charAt(offset-1);
