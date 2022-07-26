@@ -15,7 +15,7 @@ const INSTANCE = "qwiktape";
         try {
           data = await scan.read();
           if (!data) break;
-          Window.this.state = Window.WINDOW_SHOWN;
+          Window.this.activate();
         }
         catch (e) {
           break;
@@ -25,6 +25,7 @@ const INSTANCE = "qwiktape";
     }
   } 
   catch (e) {
+    pipe.close();
     await pipe.connect(INSTANCE);
     await pipe.write(INSTANCE); //because why not?
     Window.this.close();

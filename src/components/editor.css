@@ -21,21 +21,28 @@
     tab-size: 1;
 
     padding: 25px;
-    //stroke: #d7d7c1;
     stroke: rgba(215, 215, 193, 50%);
     stroke-width: 1px;
-
-    //background lines not sharp
-    //background-size: 100% 1.4em;
-    //background-image: url(path:E M0-0-0-0);
-    //background-repeat: repeat-y;
-
-    background-size: 800px 25px;
-    background-image: url(path:m0 0 800 0m0 -25);
-    background-repeat: repeat;
-    background-attachment: local;
   }
   
+  @media (platform != "Linux"){
+    :root {
+      background-size: 800px 25px;
+      background-image: url(path:m0 0 800 0m0 -25);
+      background-repeat: repeat;
+      background-attachment: local;
+    }
+  }
+
+  @media (platform == "Linux"){
+    :root {
+      //background lines not sharp
+      background-size: 100% 25px;
+      background-image: url(path:E M0-0-0-0);
+      background-repeat: repeat-y;
+    }
+  }
+    
   :root > text {
     white-space:pre;
     height:1.4em;
