@@ -128,8 +128,6 @@ export class Editor extends Element {
   //between new line token, not counting white space
 
   evalTokens(tokens){
-    //this.evalTokensText();
-    //return;
     let [caretLine, offset] = this.plaintext.selectionStart;
     const lastIndex = tokens.findIndex((token)=>{
       let lineEditable = caretLine !== token.startLine-1; //|| token.startColumn > offset
@@ -235,13 +233,12 @@ export class Editor extends Element {
 
   insertResult(token){
     let { value, node, padding } = token;
-    const decimalPosition = /\./g.exec(value)?.index;
     const text = printf("%*s",padding, value);
     const seperator = "═".repeat(padding);
-    const sep = this.children[node.startLine].firstChild;
+    const seperatorNode = this.children[node.startLine].firstChild;
     
     this.plaintext.update((transact)=>{
-      transact.setText(sep, seperator);
+      transact.setText(seperatorNode, seperator);
       this.plaintext.selectRange(node.startLine, seperator.length, node.startLine, seperator.length)
       transact.execCommand('edit:insert-break');
       const result = this.children[node.startLine+1].firstChild;
