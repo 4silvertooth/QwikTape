@@ -1,20 +1,21 @@
 const locale = [
+  "1234567.89",
+  "1234567,89",
   "1,234,567.89",
   "1.234.567,89",
   "1 234 567.89",
   "1 234 567,89",
-  "12,34,567·89",
+  "12,34,567.89",
   "12 34 567.89",
   "1'234'567.89",
   "1'234'567,89",
   "1.234.567'89",
   "1˙234˙567.89",
-  "1˙234˙567,89"
+  "1˙234˙567,89",
+  "1,234,567·89",
 ];
 
-const { BigNum, BigNumEnv }  = sciter.import("../src/parser/bignum.js").withLocale(locale[0]);
-globalThis.BigNum = BigNum;
-globalThis.BigNumEnv = BigNumEnv;
+sciter.import("../src/parser/bignum.js").withLocale(locale[0]);
 const { QwikTape } = sciter.import("../src/parser/tape-embedded.js");
 
 function parse(input) {
@@ -31,6 +32,8 @@ function any(expected){
 test('lexer', () => {
   expect(parse("-900").lex.errors).equal([]);
   expect(parse("-900").lex.tokens).haveLength(2);
+  expect(parse("-900.00").lex.errors).equal([]);
+  expect(parse("-900.00").lex.tokens).haveLength(2);
   expect(parse("900.").lex.errors).equal([]);
   expect(parse(".50").lex.errors).equal([]);
   expect(parse(".50 .50").lex.errors).equal([]);

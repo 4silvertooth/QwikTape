@@ -68,7 +68,7 @@ function matchNumberLiteral(text, offset, lexedTokens){
     const value = BigNum.parseString(match[0])
     const mantissa = match[1] ?? match[2] ?? "0"
     match.payload = {
-      parse: value, //can't view in debug-view, JSON.Stringify will remove this
+      parse: value,
       formatted: match[1] ? true : false,
       decimalDigits: mantissa.length-1,
       decimalPosition: match[0].length - (match[2] ? 1 : (match[1]?.length ?? 0)),
@@ -219,8 +219,6 @@ class TapeParser extends BaseParser {
       skipValidations: true,
       outputCst: false,
       recoveryEnabled: true,
-      //outputCst: true,
-      //recoveryEnabled: false,
     })
     const $ = this
 
@@ -293,7 +291,6 @@ class TapeParser extends BaseParser {
           const localeString = payload.parse.toLocaleString(payload.decimalDigits)
           const localeDecimalPosition = localeString.length - Math.max(payload.decimalDigits, this.decimalDigits)
           const desiredPadding = padding + this.minPad - (startColumn + localeDecimalPosition)
-          // const desiredPadding = padding - (startColumn + payload.decimalPosition)
 
           if(token.padding != desiredPadding){
             Object.assign(token, {
@@ -835,6 +832,11 @@ class TapeParser extends BaseParser {
 // reuse the same parser instance.
 const parser = new TapeParser([])
 
+function changeLocale(format){
+  BigNumEnv.initLocale(format);
+  regexpNumberLiteral = BigNumEnv.getNumeralMatcher();
+}
+
 export const QwikTape = {
   defaultRule: 'tape',
   lexer: TapeLexer,
@@ -843,4 +845,5 @@ export const QwikTape = {
   tokenType: TokenType,
   diagramBuilder: chevrotain.createSyntaxDiagramsCode,
   ERR: {NOALT: chevrotain.NoViableAltException},
+  changeLocale: changeLocale,
 }

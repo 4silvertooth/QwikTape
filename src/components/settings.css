@@ -35,6 +35,11 @@
     display: block;
     white-space: wrap;    
   }
+  
+  :root > form > select {
+    font-family: monospace;
+    font-size: 10pt;
+  }
 
   :root > button#close {
     stroke-width: 1px;

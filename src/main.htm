@@ -11,30 +11,9 @@
 
 <script type="module" src="storage/check-instance.js"/>
 <script type="module">
-  import * as sciter from "@sciter";
   import { PLATFORM } from "@env";
   Window.this.mediaVars({platform: PLATFORM});
-
-  /*const supportedLocale = [
-    "1234567.89",
-    "1234567,89",
-    "1,234,567.89",
-    "1.234.567,89",
-    "1 234 567.89",
-    "1 234 567,89",
-    "12,34,567·89",
-    "12 34 567.89",
-    "1'234'567.89",
-    "1'234'567,89",
-    "1.234.567'89",
-    "1˙234˙567.89",
-    "1˙234˙567,89"
-  ];*/
-
   globalThis.locale = 1234567.89.toLocaleString();
-  const { BigNum, BigNumEnv }  = sciter.import("./parser/bignum.js").withLocale(globalThis.locale);
-  globalThis.BigNum = BigNum;
-  globalThis.BigNumEnv = BigNumEnv;
 </script>
 
 <title>QwikTape</title>
@@ -53,7 +32,6 @@
       super();
       this.currentTape = Storage.currentTape();
       this.settings = Storage.getSettings() ?? {decimalDigits: 2, padding: 12};
-      globalThis.BigNumEnv.setDecimalDigits(this.settings.decimalDigits);
     }
     
     componentDidMount(){
@@ -124,8 +102,8 @@
     }
 
     ["on settings-changed"](evt, form){
-      globalThis.BigNumEnv.setDecimalDigits(evt.data.decimalDigits)
       Storage.saveSettings(evt.data);
+      globalThis.BigNumEnv.setDecimalDigits(evt.data.decimalDigits);      
       this.componentUpdate({settings: evt.data});
     }
     

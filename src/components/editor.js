@@ -1,5 +1,8 @@
-import { QwikTape } from "../parser/tape-embedded.js";
-const { lexer, parser, tokenType, tokenMatcher, ERR } = QwikTape;
+import * as sciter from "@sciter";
+sciter.import("../parser/bignum.js").withLocale(globalThis.format);
+
+const { QwikTape } = sciter.import("../parser/tape-embedded.js");
+const { lexer, parser, tokenType } = QwikTape;
 
 export class Editor extends Element {
   ast;
@@ -20,6 +23,15 @@ export class Editor extends Element {
     this.tape = props.tape;
     this.settings = props.settings; 
     if(this.tape) {
+      if(globalThis.locale !== this.tape.locale){
+        const blankTape = this.tape.text?.trim().length;
+        const toLocale = blankTape == 0 ? globalThis.locale : this.tape.locale;
+        QwikTape.changeLocale(toLocale);
+        this.tape.locale = toLocale;
+      }
+      else {
+        QwikTape.changeLocale(this.tape.locale);
+      }
       this.value = this.tape.text;
       this.postEvent(new Event("change", {bubbles: true}));
       if(lastId !== this.tape.id) //set caret if new document 
@@ -141,7 +153,7 @@ export class Editor extends Element {
         this.insertNewLineBefore(token);
         return true;
       }
-      if(!tokenMatcher(token, tokenType.NewLine)){
+      if(!QwikTape.tokenMatcher(token, tokenType.NewLine)){
         this.mark(token);
       }
     });
@@ -260,6 +272,19 @@ export class Editor extends Element {
       this.plaintext.selectRange(lineNo, offset, lineNo, offset);
   }
   
+  /*changeTapeLocale(tape, format){
+    this.changeLocale(tape.locale, format);
+    const lex = lexer.tokenize(tape.text || '');
+    parser.input = lex.tokens;
+    const text = lex.tokens.reduce((text, nextToken)=>{
+      return text + " " + (nextToken.formatting || nextToken.image);
+    }, '');
+    tape.text = text;
+    tape.locale = format;
+    this.changeLocale(format);
+    this.value = tape.text;
+  }*/
+  
   ["on save-update"](evt, editor){
     this.tape.text = this.value;
   }
@@ -270,7 +295,7 @@ export class Editor extends Element {
     const range = this.rangeFromPoint(evt.x, evt.y);
     if( !range ) return;
     //todo: negation Variable are filterd, 
-    //as the token changes to NegetiveLiteral 
+    //as the token changes to NegetiveLiteral
     const requiredNode = range.marks()
       .filter((key)=>["Error", "Identifier", "Variable"].includes(key))
       .length;
@@ -367,7 +392,7 @@ export class Editor extends Element {
     
     parser.errors.map((error)=>{
       //console.log(error, error.token, error.previousToken)
-      if(error instanceof ERR.NOALT) {
+      if(error instanceof QwikTape.ERR.NOALT) {
         //Object.assign(error.previousToken, {tooltip: error});
         //this.mark(error.previousToken, ['Error']);
         return;

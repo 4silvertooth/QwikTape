@@ -16,8 +16,9 @@ int uimain(std::function<int()> run ) {
                           ALLOW_EVAL |
                           ALLOW_SYSINFO );
 #ifdef _DEBUG
-  sciter::debug_output_console console;
+  SciterSetOption(NULL, SCITER_SET_DEBUG_MODE, TRUE);
 #endif
+
   sciter::archive::instance().open(aux::elements_of(resources));
   sciter::om::hasset<qwiktape> pwin = new qwiktape();
   pwin->load(WSTR("this://app/main.htm"));

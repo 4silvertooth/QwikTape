@@ -5,14 +5,7 @@ const groupMatcher = (grouping)=>{
   return new RegExp(`(?<!\\.\\d+)(?<=\\d)(?=(?:\\d{${grouping}})*\\d{${grouping ? 3 : 0}}(?:\\.|\$))`, 'g');
 }
 
-const locale = {
-  thousandSeperator: '',
-  decimalSeperator: '.',
-  grouping: 0,
-  decimalDigits: 2,
-  groupMatcher: groupMatcher(0),
-  numeralMatcher: /-?\d+(\.\d*)?|-?(\.\d+)/y,
-};
+const locale = {};
 
 BigNum.prototype.toLocaleString = function( decimalDigits = locale.decimalDigits){
   decimalDigits = Math.max(locale.decimalDigits, decimalDigits);
@@ -23,7 +16,6 @@ BigNum.prototype.toLocaleString = function( decimalDigits = locale.decimalDigits
   return splitVal.join(locale.thousandSeperator);
 }
 
-//static function
 BigNum.parseString = function(string){
   let unformat = locale.thousandSeperator ? string.replaceAll(locale.thousandSeperator, '') : string;
   unformat = unformat.replace(locale.decimalSeperator, '.');
@@ -45,25 +37,40 @@ BigNum.prototype.canTrimZeros = function(decimalDigits){
   return BigNum(withGivenPrecision) == BigNum(withFixedPrecision);
 }
 
-
 BigNumEnv.initLocale = function(format){
-  const match = /^\d{1,2}[^\d]?(\d{2,3})([^\d])?\d{3}([^\d])(\d+)$/m.exec(format);
-  if(!match) {
-    return locale; //falling to default locale if can't match the locale
-  }
-  const [_, grouping, thousandSeperator, decimalSeperator, decimalDigits] = match;
-  locale.grouping = thousandSeperator ? grouping.length : 0;
-  locale.thousandSeperator = thousandSeperator ?? '';
-  locale.decimalSeperator = decimalSeperator;
-  locale.decimalDigits = decimalDigits.length;
-  locale.groupMatcher = groupMatcher(locale.grouping);
+  Object.assign(locale, BigNumEnv.getLocale(format));
   if(locale.thousandSeperator === '') {
     locale.numeralMatcher = new RegExp(`-?(?:(?:\\d+)+(\\${locale.decimalSeperator}\\d*)?|(\\${locale.decimalSeperator}\\d+))`, 'y');
   }
   else {
     locale.numeralMatcher = new RegExp(`-?(?:(?:\\d+\\${locale.thousandSeperator}?)+(\\${locale.decimalSeperator}\\d*)?|(\\${locale.decimalSeperator}\\d+))`, 'y');
   }
+  
   return locale;
+}
+
+BigNumEnv.getLocale = function(format = 1234567.89.toLocaleString()){
+
+  const newLocale = {
+    thousandSeperator: '',
+    decimalSeperator: '.',
+    grouping: 0,
+    decimalDigits: 2,
+    groupMatcher: groupMatcher(0),
+    numeralMatcher: /-?\d+(\.\d*)?|-?(\.\d+)/y,
+  };
+
+  const match = /^\d{1,2}[^\d]?(\d{2,3})([^\d])?\d{3}([^\d])(\d+)$/m.exec(format);
+  if(!match) {
+    return newLocale;
+  }
+  const [_, grouping, thousandSeperator, decimalSeperator, decimalDigits] = match;
+  newLocale.grouping = thousandSeperator ? grouping.length : 0;
+  newLocale.thousandSeperator = thousandSeperator ?? '';
+  newLocale.decimalSeperator = decimalSeperator;
+  newLocale.decimalDigits = decimalDigits.length;
+  newLocale.groupMatcher = groupMatcher(newLocale.grouping);
+  return newLocale;
 }
 
 BigNumEnv.getNumeralMatcher = function(){
@@ -78,7 +85,8 @@ BigNumEnv.getDecimalDigits = function(){
   return locale.decimalDigits;
 }
 
-export function withLocale(locale){
-  BigNumEnv.initLocale(locale);
-  return { BigNum, BigNumEnv };
+export function withLocale(format){
+  BigNumEnv.initLocale(format);
+  globalThis.BigNum = BigNum;
+  globalThis.BigNumEnv = BigNumEnv;
 }

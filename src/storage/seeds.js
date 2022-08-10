@@ -6,27 +6,27 @@ This is a QwikTape document,
 Do calculations easily, neatly with auto indent 
 and formatting,
 
-      300.00 my last balance
--       5.22 food 
+      ${300.00.toLocaleString()} my last balance
+-       ${5.22.toLocaleString()} food 
 ════════════
-      294.78 this is my new balance
+      ${294.78.toLocaleString()} this is my new balance
 
 
 income = 2200 assign values to a variable name
 
-      294.78 
+      ${294.78.toLocaleString()} 
 +     income
 ════════════
-     2494.78 = balance assign results to variable
+     ${2494.78.toLocaleString()} = balance assign results to variable
 
      balance     using varialbe from above
--      25.00% ⥱ 623.70 damn high taxes
+-      ${25.00.toLocaleString()}% ⥱ ${623.70.toLocaleString()} damn high taxes
 ════════════
-     1871.09 
--      50.00 continue calculations
--      20.00 
+     ${1871.09.toLocaleString()} 
+-      ${50.00.toLocaleString()} continue calculations
+-      ${20.00.toLocaleString()} 
 ════════════
-     1801.09 
+     ${1801.09.toLocaleString()} 
 
 Try changing the value of variable 'income' above,
 all following values will recalculate.
@@ -39,13 +39,13 @@ rules of operator precedence,
 area = pi × radius ^ 2 
 
         area hover cursor over variable name
-+     600.00
++     ${600.00.toLocaleString()}
 ════════════
-      678.54
-÷       0.00 hover cursor over errors
--    -100.00 subtract negetive numbers
+      ${678.54.toLocaleString()}
+÷     ${0.00.toLocaleString()} hover cursor over errors
+-    -${100.00.toLocaleString()} subtract negetive numbers
 ════════════
-      778.54 erroneous operations skipped
+      ${778.54.toLocaleString()} erroneous operations skipped
 
 Document is auto saved. Use the bookmark menu on top left to find all
 the documents added.

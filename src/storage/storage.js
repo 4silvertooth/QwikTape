@@ -6,6 +6,11 @@ const fileVersion = 2;
 const locale = globalThis.locale || 1234567.89.toLocaleString();
 
 let storage = DB.open(Env.path("documents") + "/qwiktapes.db", true);
+let root = migrateDb(storage) || initDb(storage);
+console.log("root", root);
+for(var tape of root.tapeByTimeStamp){
+  console.log("tape", tape);
+}
 
 function initDb(storage) {
   storage.root = {
@@ -52,7 +57,7 @@ function seed(storage){
     name: "Tests",
     timeStamp: new Date(helpTape.timeStamp.valueOf()+1000),
     freeze: false,
-    locale: locale,
+    locale: "1234567.89",
     text: tests,
   }
 
@@ -64,33 +69,22 @@ function seed(storage){
   storage.root.recent.push(helpTape);  
 }
 
-//this needs to change after the storage-sdk bug is fixed
 function migrateDb(storage){
   if(!storage.root) return null;
   if(storage.root.version == 1){
-    const backupById = storage.root.tapeById;
-    const backupByTimeStamp = storage.root.tapeByTimeStamp;
-    /*for(var tape in indexByTimeStamp){
-      tape.locale = locale;
-    }*/
-    const migrate = JSON.parse(JSON.stringify(storage.root));
-    migrate.tapeById = backupById;
-    migrate.tapeByTimeStamp = backupByTimeStamp;
-    migrate.version = 2;
-    migrate.settings.decimalDigits = migrate.settings.precision;
-    delete migrate.settings.precision;
-    migrate.settings.locale = locale;
-    storage.root = migrate;
+    storage.root.version = 2;
+    storage.root.settings.decimalDigits = storage.root.settings.precision;
+    storage.root.settings.locale = locale;
+    delete storage.root.settings.precision;
+    if( typeof storage.root.settings.replaceOperator === "string"){ //select `as` bug
+      storage.root.settings.replaceOperator = storage.root.settings.replaceOperator === "true" ? true : false; 
+    }
+    for(var tape of storage.root.tapeByTimeStamp){
+      tape.locale = "1234567.89";
+    }
     storage.commit();
   }
-
   return storage.root;
-}
-
-let root = migrateDb(storage) || initDb(storage);
-console.log(root);
-for(var tape of root.tapeByTimeStamp){
-  console.log(tape);
 }
 
 document.on("beforeunload", function(evt, el){
@@ -146,7 +140,7 @@ export class Storage {
     }
     if(removed[0].id === root.last.id){
       root.last = root.recent[index == 0 ? 0 : index-1];
-    }  
+    }
     return root.last;
   }
   

@@ -1,2 +1,3 @@
 *.exe
 .vs
+main/resources.cpp
