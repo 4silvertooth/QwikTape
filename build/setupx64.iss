@@ -6,6 +6,7 @@
 
 [CustomMessages]
 LaunchProgram=Launch {#Application} after finishing installation
+CreateDesktopIcon=Create desktop icon
 
 [Setup]
 SignTool=signtool
@@ -54,3 +55,11 @@ Source: {#SourcePath}\..\sdk\bin\windows\{#ARCH}\sciter.dll; DestDir: "{app}"
 
 [Run]
 Filename: {app}\{#Executable}; Description: {cm:LaunchProgram,{#Application}}; Flags: nowait postinstall skipifsilent
+
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; \
+    GroupDescription: "{cm:AdditionalIcons}";
+
+[Icons]
+Name: "{userdesktop}\{#Application}"; Filename: "{app}\{#Executable}"; Tasks: desktopicon
+Name: "{group}\{#Application}"; Filename: "{app}\{#Executable}"; Tasks: desktopicon
