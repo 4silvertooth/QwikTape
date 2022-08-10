@@ -17,10 +17,12 @@ workspace "qwiktape"
     links { "shell32", "advapi32", "ole32", "oleaut32", "comdlg32" }
     platforms { "x32", "x64", "arm64" }
     systemversion "latest"
+  
   filter "system:macosx"
     location ("build/" .. _TARGET_OS)
     links { "CoreFoundation.framework", "Cocoa.framework", "IOKit.framework" }
     platforms { "x64" }
+  
   filter "system:linux"
     location("build/" .. _TARGET_OS)
     platforms { "x64", "arm32", "arm64" }
@@ -35,6 +37,9 @@ workspace "qwiktape"
     linkoptions { 
       "-fPIC",
       "-pthread",
+    }
+    prebuildcommands { 
+      "\"%{prj.location}/../../sdk/bin/".. _TARGET_OS .. "/packfolder\" \"%{prj.location}/../../src\" \"%{prj.location}/../../main/resources.cpp\" -v \"resources\""
     }
 
   filter {}
