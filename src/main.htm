@@ -103,7 +103,7 @@
 
     ["on settings-changed"](evt, form){
       Storage.saveSettings(evt.data);
-      globalThis.BigNumEnv.setDecimalDigits(evt.data.decimalDigits);      
+      globalThis.BigNumEnv.setDecimalDigits(evt.data.decimalDigits);
       this.componentUpdate({settings: evt.data});
     }
     

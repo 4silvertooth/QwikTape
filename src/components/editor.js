@@ -26,11 +26,11 @@ export class Editor extends Element {
       if(globalThis.locale !== this.tape.locale){
         const blankTape = this.tape.text?.trim().length;
         const toLocale = blankTape == 0 ? globalThis.locale : this.tape.locale;
-        QwikTape.changeLocale(toLocale);
+        QwikTape.changeLocale(toLocale, this.settings.decimalDigits);
         this.tape.locale = toLocale;
       }
       else {
-        QwikTape.changeLocale(this.tape.locale);
+        QwikTape.changeLocale(this.tape.locale, this.settings.decimalDigits);
       }
       this.value = this.tape.text;
       this.postEvent(new Event("change", {bubbles: true}));

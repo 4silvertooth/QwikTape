@@ -832,8 +832,9 @@ class TapeParser extends BaseParser {
 // reuse the same parser instance.
 const parser = new TapeParser([])
 
-function changeLocale(format){
+function changeLocale(format, decimalDigits){
   BigNumEnv.initLocale(format);
+  BigNumEnv.setDecimalDigits(decimalDigits);
   regexpNumberLiteral = BigNumEnv.getNumeralMatcher();
 }
 
