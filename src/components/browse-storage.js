@@ -50,6 +50,10 @@ export class BrowseStorage extends Element
   }
   
   ["on blur at :root > div > input"](evt, el){
+    if(evt.reason == 0){ //fix: no input on rename
+      this.$("input").state.focus = true;
+      return;
+    }
     this.componentUpdate({renaming: null});
   }
 
@@ -57,7 +61,8 @@ export class BrowseStorage extends Element
     const key = evt.source.getAttribute("key");
     const index = evt.source.getAttribute("index");
     this.componentUpdate({renaming: key});
-    this.post(()=>this.$("input").state.focus = true);
+    if(this.renaming)
+      this.post(()=>this.$("input").state.focus = true);
   }
 
   ["on ^click at menu.popup > #delete"](evt, el){
@@ -84,6 +89,7 @@ export class BrowseStorage extends Element
   }
   
   render(){
+    console.log(this.renaming);
     return <section.files styleset={__DIR__ + "browse-storage.css#browse-storage"}>
       {this.list.map((tape, index)=>{
         return <div key={tape.id} current={tape.id == this.current} deleting={tape.id === this.deleting}>
