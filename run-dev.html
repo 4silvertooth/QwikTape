@@ -124,6 +124,34 @@
     saveAndLaunch(path, buffer);
   })
   
+  document.on("click", "button#inspector", async function() {
+    const SUFFIX = {Windows: ".exe", OSX: ".app"};
+    const PREFIX = {Windows: "\\", OSX: "/../../../"};
+
+    const inspectorPath = env.home((PREFIX[env.PLATFORM] || "") + "inspector" + (SUFFIX[env.PLATFORM] || ""));
+
+    try {
+        await sys.fs.stat(inspectorPath);
+        env.launch(inspectorPath);
+    }
+    catch (error) {
+        Window.modal(<alert>Cannot find {inspectorPath}</alert>);
+    }
+  });
+  
+  document.on("click", "button#help", function() {
+    const url = URL.fromPath(env.home("../../../samples.sciter/applications.quark/mdview/main.htm"));
+    let w = new Window({
+      url: url,
+      parameters: { folder: env.home("../../../docs/md") },
+      state: Window.WINDOW_HIDDEN
+    });
+    if(!w)
+      Window.this.modal(<alert>Error launching {url}</alert>);
+  });
+
+
+  
   app.on("log", (evt)=>{
     log.value = evt.data;
   })
@@ -144,6 +172,8 @@
     <button#tests>Tests</button>
     <button#screenshot>Screen Shot</button>
     <button#build>Build</button>
+    <button#inspector>Inspector</button>
+    <button#help>Help</button>
   <div>  
 </body>
 

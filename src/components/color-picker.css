@@ -15,7 +15,7 @@
     width: 8dip;
     height: 24dip;
     box-shadow: #aaa 1dip 1dip 1dip;
-    background: hsv(var(hue-color), 100, 100);
+    background: hsv(var(hue-color), 100%, 100%);
     border-left: 2dip solid white;
     border-right: 2dip solid white;
     padding: none;
@@ -31,7 +31,7 @@
     size: 200dip 200dip;
     margin: 0;
     padding: none;
-    var(hue-color): 0;
+    var(hue-color): 0deg;
   }
   
   :root > widget {
@@ -42,7 +42,7 @@
   }
   
   :root > widget > #palette {
-    background: linear-gradient(to left, hsv(var(hue-color),100,100), hsv(var(hue-color),0,100));
+    background: linear-gradient(to left, hsv(var(hue-color),100%,100%), hsv(var(hue-color),0%,100%));
     foreground: linear-gradient(90deg, rgba(0,0,0, 0), rgba(0,0,0,1));
     //background: linear-gradient(to left, hsl(var(hue-color),100,50), hsl(var(hue-color),0,100));
     //foreground: linear-gradient(90deg, rgba(0,0,0, 0), rgba(0,0,0,1));

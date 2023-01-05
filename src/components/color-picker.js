@@ -4,6 +4,7 @@ export class ColorPicker extends Element
   constructor(props) {
     super();
     const color = props.color.hsv;
+    console.log(typeof color, color);
     this.color = {h: color[0], s: color[1], v: color[2]};
   }
   
@@ -99,8 +100,9 @@ export class Color extends Element
   }
 
   ["on click at :root"](evt, el){
-    const color = this.style.getPropertyValue('background-color');
-    this.popup(<ColorPicker color={color}/>, {
+    const color = this.style.colorOf('background-color');
+    const picker = <ColorPicker color={color}/>;
+    this.popup(picker, {
       anchorAt: 7, 
       popupAt:3,
     });
