@@ -89,7 +89,6 @@ export class BrowseStorage extends Element
   }
   
   render(){
-    console.log(this.renaming);
     return <section.files styleset={__DIR__ + "browse-storage.css#browse-storage"}>
       {this.list.map((tape, index)=>{
         return <div key={tape.id} current={tape.id == this.current} deleting={tape.id === this.deleting}>

@@ -64,7 +64,6 @@ Also inspired by [CalcTape](https://calctape.app/), [Numi](https://numi.app/), [
 
 # Coming up.
 * i18n
-* Themes
 * Printing support
 * PDF export
 
@@ -122,7 +121,11 @@ Use,
 
 * `Screen Shot` to capture the image of the main application. 
 
-* `Build` to produce final builds. (right now just windows)
+* `Build` to produce final builds.
+
+* `Inspector` to open inspector for debugging 
+
+* `Help` to open sciter sdk documentation
 
 <br></br>
 I've build all assets like icons and logos inside [`src/assets`](src/assets) in figma and are licensed under [CC](

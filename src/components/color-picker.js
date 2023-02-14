@@ -4,7 +4,6 @@ export class ColorPicker extends Element
   constructor(props) {
     super();
     const color = props.color.hsv;
-    console.log(typeof color, color);
     this.color = {h: color[0], s: color[1], v: color[2]};
   }
   
