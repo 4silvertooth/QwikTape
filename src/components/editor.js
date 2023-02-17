@@ -177,7 +177,7 @@ export class Editor extends Element {
     this.plaintext.update( (transact)=>{
       transact.setText(line, text);
       return true;
-    })    
+    })
   }
   
   replace(lineNode, fromPos, toPos, padding, withText){
@@ -264,9 +264,8 @@ export class Editor extends Element {
   
   replaceChar(lineNo, textNode, offset, symbol){
     this.plaintext.update( (transact) => {
-      transact.deleteRange(textNode, offset-1, textNode, offset);
-      transact.insertText(textNode, offset-1, symbol);
-      //transact.execCommand("edit:insert-text", symbol);
+      const [_node, _offset] = transact.deleteRange(textNode, offset, textNode, offset-1);
+      transact.insertText(_node, _offset, symbol);
       return true;
     });
       this.plaintext.selectRange(lineNo, offset, lineNo, offset);
@@ -294,6 +293,7 @@ export class Editor extends Element {
     //will be last mark even on blank space after mark
     const range = this.rangeFromPoint(evt.x, evt.y);
     if( !range ) return;
+
     //todo: negation Variable are filterd, 
     //as the token changes to NegetiveLiteral
     const requiredNode = range.marks()
@@ -374,14 +374,15 @@ export class Editor extends Element {
     if(evt.reason == 4) return;
     if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator == true) {
       let [line, offset] = editor.plaintext.selectionStart;
-      const textNode = editor.children[line]?.firstChild;      
+      const textNode = editor.children[line]?.firstChild;
       const op = textNode.textContent.charAt(offset-1);
+      //todo: benchmark switch statement vs if-else for performance
       switch(op){
         case '*':
-          this.replaceChar(line, textNode, offset, '×');
+          textNode.data = textNode.data.replace('*','×');
           break;
         case '/':
-          this.replaceChar(line, textNode, offset, '÷');
+          textNode.data = textNode.data.replace('/','÷');
           break;
       }
     }
@@ -408,7 +409,7 @@ export class Editor extends Element {
     })
     
   }
-  
+ 
   render(){
     return <plaintext styleset={__DIR__ + "editor.css#editor"} id='tape'/>
   }
