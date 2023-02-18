@@ -1,13 +1,29 @@
 import * as DB from "@storage"; 
 import * as Env from "@env";
 import * as Sciter from "@sciter";
+import * as Sys from "@sys";
 
 const fileVersion = 2;
+const tapesFileName = "qwiktapes.db";
 const locale = globalThis.locale || 1234567.89.toLocaleString();
 
-let storage = DB.open(Env.path("documents") + "/qwiktapes.db", true);
+function getTapesLocation(){
+  const homePath = Env.home(tapesFileName);
+  const documentPath = Env.path("documents");
+
+  if(Sys.fs.sync.stat(homePath)?.isFile) {
+    return homePath;
+  }
+  else if(Sys.fs.sync.stat(documentPath)?.isDirectory) {
+    return Env.path("documents", tapesFileName);
+  }
+
+  return homePath;
+}
+
+let storage = DB.open(getTapesLocation(), true);
 let root = migrateDb(storage) || initDb(storage);
-console.log("root", root);
+
 for(var tape of root.tapeByTimeStamp){
   console.log("tape", tape);
 }

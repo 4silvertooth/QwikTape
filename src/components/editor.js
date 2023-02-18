@@ -1,5 +1,5 @@
 import * as sciter from "@sciter";
-sciter.import("../parser/bignum.js").withLocale(globalThis.format);
+sciter.import("../parser/bignum.js").withLocale(globalThis.locale);
 
 const { QwikTape } = sciter.import("../parser/tape-embedded.js");
 const { lexer, parser, tokenType } = QwikTape;
@@ -268,7 +268,7 @@ export class Editor extends Element {
       transact.insertText(_node, _offset, symbol);
       return true;
     });
-      this.plaintext.selectRange(lineNo, offset, lineNo, offset);
+    this.plaintext.selectRange(lineNo, offset, lineNo, offset);
   }
   
   /*changeTapeLocale(tape, format){
@@ -379,10 +379,12 @@ export class Editor extends Element {
       //todo: benchmark switch statement vs if-else for performance
       switch(op){
         case '*':
-          textNode.data = textNode.data.replace('*','×');
+          this.replaceChar(line, textNode, offset, '×');
+          //textNode.data = textNode.data.replace('*','×');
           break;
         case '/':
-          textNode.data = textNode.data.replace('/','÷');
+          this.replaceChar(line, textNode, offset, '÷');
+          //textNode.data = textNode.data.replace('/','÷');
           break;
       }
     }
