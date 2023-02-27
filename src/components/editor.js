@@ -360,6 +360,13 @@ export class Editor extends Element {
       }
     }
   }
+  
+  ["on ^keypress at :root"](evt, editor){
+    if(this.settings.replaceOperator != true) return;
+    if(evt.key !== '*' && evt.key !== '/') return;
+    
+    evt.key = (evt.key == '*') ? '×' : '÷';
+  }
 
   // evt.reason
   // const CHANGE_BY_INS_CHAR = 0;  // single char insertion
@@ -380,11 +387,9 @@ export class Editor extends Element {
       switch(op){
         case '*':
           this.replaceChar(line, textNode, offset, '×');
-          //textNode.data = textNode.data.replace('*','×');
           break;
         case '/':
           this.replaceChar(line, textNode, offset, '÷');
-          //textNode.data = textNode.data.replace('/','÷');
           break;
       }
     }

@@ -61,8 +61,11 @@ export class BrowseStorage extends Element
     const key = evt.source.getAttribute("key");
     const index = evt.source.getAttribute("index");
     this.componentUpdate({renaming: key});
-    if(this.renaming)
-      this.post(()=>this.$("input").state.focus = true);
+    if(this.renaming){
+      this.post(()=>{
+        this.$("input").state.focus = true;
+      });  
+    }  
   }
 
   ["on ^click at menu.popup > #delete"](evt, el){
