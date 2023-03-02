@@ -25,22 +25,11 @@
     stroke-width: 1px;
   }
   
-  @media (platform != "Linux"){
-    :root {
-      background-size: 800px 25px;
-      background-image: url(path:m0 0 800 0m0 -25);
-      background-repeat: repeat;
-      background-attachment: local;
-    }
-  }
-
-  @media (platform == "Linux"){
-    :root {
-      //background lines not sharp
-      background-size: 100% 25px;
-      background-image: url(path:E M0-0-0-0);
-      background-repeat: repeat-y;
-    }
+  :root {
+    background-size: 800px 25px;
+    background-image: url(path:m0 0 800 0m0 -25);
+    background-repeat: repeat;
+    background-attachment: local;
   }
     
   :root > text {
