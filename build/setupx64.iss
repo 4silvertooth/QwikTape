@@ -9,7 +9,8 @@ LaunchProgram=Launch {#Application} after finishing installation
 CreateDesktopIcon=Create desktop icon
 
 [Setup]
-SignTool=signtool
+;SignTool=signtool
+;SignedUninstaller=no
 AppName={#Application}
 AppVersion={#AppVersion}
 AppVerName={#Application} {#AppVersion} {#ARCH}

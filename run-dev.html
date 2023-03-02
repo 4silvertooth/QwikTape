@@ -40,6 +40,42 @@
     }    
   }
 
+  function checkFile(path) {
+    if (sys.fs.$stat(path)) return path;
+    return null;
+  }
+
+  function makePath(dir, subdirs, nameext) {
+    let path = dir;
+    for (const sub of subdirs) {
+      path += "/";
+      path += sub;
+      if (checkFile(path)) continue;
+      if (!sys.fs.$mkdir(path)) throw "makePath: cannot create dir:" + path;
+    }
+    return path + "/" + nameext;
+  }
+
+  function copyFileForce(fnSrc, fnDes) {
+    if (sys.fs.$stat(fnDes))
+      sys.fs.$unlink(fnDes);
+    sys.fs.$copyfile(fnSrc, fnDes);
+  }
+
+  //exert from sciter quark project, by @mice2100 on gitlab
+  function makeAppleBundle(exefile, params) {
+    makePath(params.out, [`${params.exe}.app`, "Contents", "MacOS"], "");
+    makePath(params.out, [`${params.exe}.app`, "Contents", "Resources"], "");
+
+    let appPath = `${params.out}/${params.exe}.app`;
+    sys.fs.$chmod(appPath, 0o755);
+    appPath += "/Contents"
+    copyFileForce(__DIR__ + "main/res/Info.plist", appPath + "/Info.plist");
+    copyFileForce(exefile, appPath + "/MacOS/" + params.exe);
+    sys.fs.$chmod(appPath + "/MacOS/" + params.exe, 0o755);
+    copyFileForce(__DIR__ + "main/res/QwikTape.icns", `${appPath}/Resources/${params.exe}.icns`);
+  }
+  
   document.on("click", "button#tests", ()=>{
     document.post(new Event("present-tests", {bubbles: true}));
   })
@@ -100,7 +136,7 @@
         info = {
           icofile: __DIR__ + "main/res/QwikTape.ico",
           productName: 'QwikTape',
-          productVersion: "v0.2",
+          productVersion: "v0.3",
           productDescription: "Write Calculate Annotate",
           productCopyright: "Copyright (C) 2022 Viral Ghelani @4silvertooth",
           productCompany: "TechViral",
@@ -112,6 +148,15 @@
         path + "/" + output + (platform === 'windows' ? '.exe' : ''),
         info
       );
+      
+      if(platform === 'macosx'){
+        mkAppleBundle(path + "/" + output, {
+          exe: output,
+          out: path,
+          productVersion: "v0.3",
+        })
+      } 
+      
       console.log(platform, path, build);
     }
     env.launch(URL.toPath(__DIR__+"build/"));
