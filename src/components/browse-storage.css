@@ -103,6 +103,7 @@
 
   :root > menu.popup > li:hover {
     background: color(accent-color);
+    cursor: pointer;
   }
   
   :root > menu.popup > li#delete {

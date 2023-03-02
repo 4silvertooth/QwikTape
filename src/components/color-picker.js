@@ -12,7 +12,7 @@ export class ColorPicker extends Element
     const palette = this.$('#palette');
     const marker = this.$('#marker');
     this.post(()=>{
-      const [w,h] = palette.state.box("dimension");
+      const [w,h] = palette.state.box("dimension","inner");
       marker.style.set({
         left: w * this.color.s,
         top: h - h * this.color.v,

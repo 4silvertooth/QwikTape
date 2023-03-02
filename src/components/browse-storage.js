@@ -90,7 +90,7 @@ export class BrowseStorage extends Element
     this.componentUpdate({deleting: null});
     return;
   }
-  
+    
   render(){
     return <section.files styleset={__DIR__ + "browse-storage.css#browse-storage"}>
       {this.list.map((tape, index)=>{
