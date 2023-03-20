@@ -1,11 +1,10 @@
-import { default as chevrotain } from "../chevrotain/chevrotain.min.js";
-
 "use strict";
 "use math";
 
+import { default as chevrotain } from "../chevrotain/chevrotain.min.js";
+import { BigNum, BigNumEnv } from "./bignum.js";
+
 // ----------------- lexer -----------------
-const BigNum = globalThis.BigNum;
-const BigNumEnv = globalThis.BigNumEnv;
 const CstParser = chevrotain.CstParser;
 const createToken = chevrotain.createToken;
 const Lexer = chevrotain.Lexer;
@@ -832,7 +831,7 @@ class TapeParser extends BaseParser {
 // reuse the same parser instance.
 const parser = new TapeParser([])
 
-function changeLocale(format, decimalDigits){
+function changeLocale(format, decimalDigits = 2){
   BigNumEnv.initLocale(format);
   BigNumEnv.setDecimalDigits(decimalDigits);
   regexpNumberLiteral = BigNumEnv.getNumeralMatcher();

@@ -2,10 +2,11 @@ import * as DB from "@storage";
 import * as Env from "@env";
 import * as Sciter from "@sciter";
 import * as Sys from "@sys";
+import { BigNumEnv, NUMBER_LOCALE_STRING } from "../parser/bignum.js";
 
 const fileVersion = 2;
 const tapesFileName = "qwiktapes.db";
-const locale = globalThis.locale || 1234567.89.toLocaleString();
+const locale = BigNumEnv.getLocaleFormat() || NUMBER_LOCALE_STRING;
 
 function getTapesLocation(){
   const homePath = Env.home(tapesFileName);

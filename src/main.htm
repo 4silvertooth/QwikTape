@@ -12,14 +12,16 @@
 <script type="module" src="storage/check-instance.js"/>
 <script type="module">
   import { PLATFORM } from "@env";
+  import { BigNumEnv } from "./parser/bignum.js";
   Window.this.mediaVars({platform: PLATFORM});
-  globalThis.locale = 1234567.89.toLocaleString();
+  BigNumEnv.initLocale();
 </script>
 
 <title>QwikTape</title>
 <style src="window.css"/>
 
 <script type="module">
+  import { BigNumEnv } from "./parser/bignum.js";
   import { Storage } from "./storage/storage.js";
   import { Tabs, BrowseStorage, Editor, SettingsForm } from "./components/index.js";
 
@@ -103,7 +105,7 @@
 
     ["on settings-changed"](evt, form){
       Storage.saveSettings(evt.data);
-      globalThis.BigNumEnv.setDecimalDigits(evt.data.decimalDigits);
+      BigNumEnv.setDecimalDigits(evt.data.decimalDigits);
       this.componentUpdate({settings: evt.data});
     }
     

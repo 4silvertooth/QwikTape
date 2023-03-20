@@ -1,5 +1,5 @@
 import * as sciter from "@sciter";
-sciter.import("../parser/bignum.js").withLocale(globalThis.locale);
+import { BigNumEnv } from "../parser/bignum.js";
 
 const { QwikTape } = sciter.import("../parser/tape-embedded.js");
 const { lexer, parser, tokenType } = QwikTape;
@@ -23,9 +23,9 @@ export class Editor extends Element {
     this.tape = props.tape;
     this.settings = props.settings; 
     if(this.tape) {
-      if(globalThis.locale !== this.tape.locale){
+      if(BigNumEnv.getLocaleFormat() !== this.tape.locale){
         const blankTape = this.tape.text?.trim().length;
-        const toLocale = blankTape == 0 ? globalThis.locale : this.tape.locale;
+        const toLocale = blankTape == 0 ? BigNumEnv.getLocaleFormat() : this.tape.locale;
         QwikTape.changeLocale(toLocale, this.settings.decimalDigits);
         this.tape.locale = toLocale;
       }
@@ -143,7 +143,7 @@ export class Editor extends Element {
     let [caretLine, offset] = this.plaintext.selectionStart;
     const lastIndex = tokens.findIndex((token)=>{
       let lineEditable = caretLine !== token.startLine-1; //|| token.startColumn > offset
-      if(lineEditable){
+      if(lineEditable || Window.this.focus != this){ //when editor not in focus caret is set to last position
         if(token.formatting || token.padding){
           this.formatToken(token);
           return true;
