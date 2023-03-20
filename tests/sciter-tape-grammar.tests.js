@@ -1,149 +1,182 @@
+const { BigNumEnv, BigNum } = sciter.import("../src/parser/bignum.js");
+
 const locale = [
-  "1234567.89",
-  "1234567,89",
-  "1,234,567.89",
-  "1.234.567,89",
-  "1 234 567.89",
-  "1 234 567,89",
-  "12,34,567.89",
-  "12 34 567.89",
-  "1'234'567.89",
-  "1'234'567,89",
-  "1.234.567'89",
-  "1˙234˙567.89",
-  "1˙234˙567,89",
-  "1,234,567·89",
+  `1234567.89`,
+  `1234567,89`,
+  `1,234,567.89`,
+  `1.234.567,89`,
+  `1 234 567.89`,
+  `1 234 567,89`,
+  `12,34,567.89`,
+  `12 34 567.89`,
+  `1'234'567.89`,
+  `1'234'567,89`,
+  `1.234.567'89`,
+  `1˙234˙567.89`,
+  `1˙234˙567,89`,
+  `1,234,567·89`,
 ];
 
-sciter.import("../src/parser/bignum.js").withLocale(locale[0]);
+BigNumEnv.initLocale();
 const { QwikTape } = sciter.import("../src/parser/tape-embedded.js");
-
-function parse(input) {
-  const lex = QwikTape.lexer.tokenize(input);
-  QwikTape.parser.input = lex.tokens;
-  let ast = QwikTape.parser.tape();
-  return {lex: lex, parser: QwikTape.parser, ast: ast}
-}
 
 function any(expected){
   return (received)=>[received instanceof expected, expected.name];
 }
 
-test('lexer', () => {
-  expect(parse("-900").lex.errors).equal([]);
-  expect(parse("-900").lex.tokens).haveLength(2);
-  expect(parse("-900.00").lex.errors).equal([]);
-  expect(parse("-900.00").lex.tokens).haveLength(2);
-  expect(parse("900.").lex.errors).equal([]);
-  expect(parse(".50").lex.errors).equal([]);
-  expect(parse(".50 .50").lex.errors).equal([]);
-  expect(parse("900.").lex.errors).equal([]);
-  expect(parse("p").lex.errors).equal([]);
-});
+function parse(input) {
+  const lex = QwikTape.lexer.tokenize(input);
+  QwikTape.parser.input = lex.tokens;
+  let ast = QwikTape.parser.tape();
+  return {
+    lex: lex, 
+    parser: QwikTape.parser, 
+    ast: ast
+  };
+}
 
-test('line comments', () => {
-  expect(parse("a b\nc").lex.errors).equal([]);
-  expect(parse("a b\nc").ast).instanceOf(Array);
-  expect(parse("a b\nc\n").lex.errors).equal([]);
-  expect(parse("a\nc").lex.errors).equal([]);
-  expect(parse("a \n  c \n").lex.errors).equal([]);
-});
+for(let TEST_LOCALE = 0; TEST_LOCALE < locale.length; TEST_LOCALE++) {
+  
+testGroup(`${locale[TEST_LOCALE]} Format`, ()=> {
 
-test('line comments starting with unicodes', () => {
-  expect(parse("હેલો  a \n  c \n").lex.errors).equal([]);
-  expect(parse("હેલો  a \n  c \n").parser.errors).equal([]);
-  expect(parse("હેલો\n  c \n").parser.errors).equal([]);
-});
+  const REAL = locale[TEST_LOCALE];
+  const INT = locale[TEST_LOCALE].slice(0, -3);
+  const D = locale[TEST_LOCALE].slice(-3, -2);
+  const SUM = BigNum(1234567) + BigNum(1234567);
+  const MULT = BigNum(1234567) * BigNum(1234567);
 
-test('annotations', () => {
-  expect(parse("12 test").lex.errors).equal([]);
-  expect(parse("12 test").parser.errors).equal([]);
-  expect(parse("12 = test").lex.tokens[1].image).equal("= test");
-  expect(parse("12 = test\n+ 12\n═══\n  24.00 = test").parser.errors).equal([]);
-  expect(parse("12 = test\n+ 12\n═══\n  24.00 = test").lex.tokens[8].image).equal("=");
-  expect(parse("12 = test\n+ 12\n═══\n  24.00 = test").lex.tokens[9].image).equal("test");
-});
+  test('BigNum parseString', ()=>{
+    expect(BigNum.parseString(INT)).equal(BigNum(1234567));
+    expect(BigNum.parseString(INT) + BigNum.parseString(INT)).defined();
+    expect(BigNum.parseString(INT).toLocaleString()).defined();
+    expect(BigNum.parseString(REAL)).equal(BigNum(1234567.89));
+    expect(BigNum.parseString(REAL) + BigNum.parseString(REAL)).defined();
+    expect(BigNum.parseString(REAL).toLocaleString()).defined();
+  });
+  
+  test('lexer', () => {
+    expect(parse(`-${INT}`).lex.errors).equal([]);
+    expect(parse(`-${INT}`).lex.tokens).haveLength(2);
+    expect(parse(`-${REAL}`).lex.errors).equal([]);
+    expect(parse(`-${REAL}`).lex.tokens).haveLength(2);
+    expect(parse(`${INT}${D}`).lex.errors).equal([]);
+    expect(parse(`${D}50`).lex.errors).equal([]);
+    expect(parse(`${D}50 ${D}50`).lex.errors).equal([]);
+    expect(parse(`${INT}${D}`).lex.errors).equal([]);
+    expect(parse(`p`).lex.errors).equal([]);
+  });
 
-test('invalid expression requiring newline', () => {
-  expect(parse("12 + 12").lex.errors).equal([]);
-  expect(parse("12 + 12").parser.errors).equal([]);
-  expect(parse("12\n").ast).equal([]);
-  expect(parse("12 + 12").ast).equal([]);
-  expect(parse("હેલો  a \n 1 * 1  c \n").parser.errors).haveLength(0);
-});
+  test('line comments', () => {
+    expect(parse(`a b\nc`).lex.errors).equal([]);
+    expect(parse(`a b\nc`).ast).instanceOf(Array);
+    expect(parse(`a b\nc\n`).lex.errors).equal([]);
+    expect(parse(`a\nc`).lex.errors).equal([]);
+    expect(parse(`a \n  c \n`).lex.errors).equal([]);
+  });
 
-test('expression add', () => {
-  expect(parse("12 \n+ 12").lex.errors).equal([]);
-  expect(parse("12 \n+ 12").parser.errors).equal([]);
-  expect(parse("12 \n+ 12").ast).equal([]);
-  expect(parse("12 \n+ 12\n").ast[0]).contain({"value": "24.00"});
-  expect(parse("12 \n+ 12\n").ast[0]).contain({"value": "24.00", node: {"image": "\n"}});
-})
+  test('line comments starting with unicodes', () => {
+    expect(parse(`હેલો  a \n  c \n`).lex.errors).equal([]);
+    expect(parse(`હેલો  a \n  c \n`).parser.errors).equal([]);
+    expect(parse(`હેલો\n  c \n`).parser.errors).equal([]);
+  });
 
-test('expression multiply', () => {
-  expect(parse("12 \n* 12").lex.errors).equal([]);
-  expect(parse("12 \n* 12").parser.errors).equal([]);
-  expect(parse("12 \n* 12").ast).equal([]);
-  expect(parse("12 \n* 12\n").ast[0]).contain({value: "144.00", node: any(Object)});
-  expect(parse("test = 12\ntest \n* 12\n").ast[0]).contain({value: "144.00", node: any(Object)})
-});
+  test('annotations', () => {
+    expect(parse(`${INT} test`).lex.errors).equal([]);
+    expect(parse(`${INT} test`).parser.errors).equal([]);
+    expect(parse(`${INT} = test`).lex.tokens[1].image).equal(`= test`);
+    expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).parser.errors).equal([]);
+    console.log(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex);
+    expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[8].image).equal(`=`);
+    expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[9].image).equal(`test`);
+  });
 
-test('expression with unicode operator', () => {
-  expect(parse("5 \n× 5").lex.errors).equal([]);
-  expect(parse("5 \n× 5").parser.errors).equal([]);
-  expect(parse("5 \n× 5").ast).equal([]);
-  expect(parse("5 \n× 5\n").ast[0]).contain({
-    type: QwikTape.tokenType.Insert,
-    value: "25.00", 
-    node: any(Object)
+  test('invalid expression requiring newline', () => {
+    expect(parse(`${INT} + ${INT}`).lex.errors).equal([]);
+    expect(parse(`${INT} + ${INT}`).parser.errors).equal([]);
+    expect(parse(`${INT}\n`).ast).equal([]);
+    expect(parse(`${INT} + ${INT}`).ast).equal([]);
+    expect(parse(`હેલો  a \n 1 * 1  c \n`).parser.errors).haveLength(0);
+  });
+
+  test('expression add', () => {
+    expect(parse(`${INT} \n+ ${INT}`).lex.errors).equal([]);
+    expect(parse(`${INT} \n+ ${INT}`).parser.errors).equal([]);
+    expect(parse(`${INT} \n+ ${INT}`).ast).equal([]);
+    expect(parse(`${INT} \n+ ${INT}\n`).ast[0]).contain({'value': SUM.toLocaleString()});
+    expect(parse(`${INT} \n+ ${INT}\n`).ast[0]).contain({'value': SUM.toLocaleString(), node: {'image': `\n`}});
   })
-  expect(parse("test = 12\ntest \n× 12\n").ast[0]).contain({
-    value: "144.00", 
-    node: any(Object)
+
+  test('expression multiply', () => {
+    expect(parse(`${INT} \n* ${INT}`).lex.errors).equal([]);
+    expect(parse(`${INT} \n* ${INT}`).parser.errors).equal([]);
+    expect(parse(`${INT} \n* ${INT}`).ast).equal([]);
+    expect(parse(`${INT} \n* ${INT}\n`).ast[0]).contain({value: MULT.toLocaleString(), node: any(Object)});
+    expect(parse(`test = ${INT}\ntest \n* ${INT}\n`).ast[0]).contain({value: MULT.toLocaleString(), node: any(Object)})
   });
-});
 
-test('result after expression', () => {
-  expect(parse("12 \n+ 12").ast).equal([]);
-  expect(parse("12 \n+ 12\n══\n24").ast).equal([]);
-  expect(parse("12 \n+ 12\n══\n25").ast).equal([]);
-  expect(parse("test = 12\n12\n+          test\n══\n25").ast).equal([]);
-  expect(parse("test = 1\n     test\n+          2\n").ast[0]).contain({
-    type: QwikTape.tokenType.Insert,
-    value: "3.00", 
-    node: any(Object)
+  test('expression with unicode operator', () => {
+    expect(parse(`${INT} \n× ${INT}`).lex.errors).equal([]);
+    expect(parse(`${INT} \n× ${INT}`).parser.errors).equal([]);
+    expect(parse(`${INT} \n× ${INT}`).ast).equal([]);
+    expect(parse(`${INT} \n× ${INT}\n`).ast[0]).contain({
+      type: QwikTape.tokenType.Insert,
+      value: MULT.toLocaleString(), 
+      node: any(Object)
+    })
+    expect(parse(`test = ${INT}\ntest \n× ${INT}\n`).ast[0]).contain({
+      value: MULT.toLocaleString(), 
+      node: any(Object)
+    });
   });
-});
 
-test('expression with comments', () => {
-  expect(parse("12 this is a comment \n+ 12").ast).equal([]);
-  expect(parse("12 \n+ 12 comment").ast).equal([]);
-  expect(parse("12 \n+ 12\n══\n24 comment").ast).equal([]);
-  expect(parse("12\n+ 12\n══\n24 = test").parser.errors).equal([]);
-  expect(parse("12 \n+ 12\n══\n24 = test\n+test\n").ast[0]).contain({
-    type: QwikTape.tokenType.Insert,
-    value: "48.00",          
-    node: any(Object)
+  test('result after expression', () => {
+    expect(parse(`${INT} \n+ ${INT}`).ast).equal([]);
+    expect(parse(`${INT} \n+ ${INT}\n══\n${SUM.toLocaleString()}`).ast).equal([]);
+    expect(parse(`test = ${INT}\n${INT}\n+          test\n══\n${SUM.toLocaleString()}`).ast).equal([]);
+    expect(parse(`test = ${INT}\n     test\n+          ${INT}\n`).ast[0]).contain({
+      type: QwikTape.tokenType.Insert,
+      value: `${SUM.toLocaleString()}`, 
+      node: any(Object)
+    });
   });
-  expect(parse("12 \n+ 12\n══\n25").ast).equal([]);
-});
 
-test('variables in expression', () => {
-  expect(parse("test = 12").ast).equal([]);
-  expect(parse("test = 12\ntest\n+12").ast).haveLength(0);
-  expect(parse("test = 12\ntest\n+12\n").ast[0]).contain({
-    type: QwikTape.tokenType.Insert,
-    value: "24.00", 
-    node: any(Object)
+  test('expression with comments', () => {
+    expect(parse(`${INT} this is a comment \n+ ${INT}`).ast).equal([]);
+    expect(parse(`${INT} \n+ ${INT} comment`).ast).equal([]);
+    expect(parse(`${INT} \n+ ${INT}\n══\n${SUM.toLocaleString()} comment`).ast).equal([]);
+    expect(parse(`${INT}\n+ ${INT}\n══\n${SUM.toLocaleString()} = test`).parser.errors).equal([]);
+    
+    expect(parse(`${INT} \n+ ${INT}\n══\n${SUM.toLocaleString()} = test\n+test\n`).ast[0]).contain({
+      type: QwikTape.tokenType.Insert,
+      value: (SUM + SUM).toLocaleString(),          
+      node: any(Object)
+    });
+    expect(parse(`${INT} \n+ ${INT}\n══\n${SUM.toLocaleString()}`).ast).equal([]);
   });
-});
 
-test('variable change in expression', () => {
-  expect(parse("15\r\n+20\r\n══\r\n30 = test\r\ntest\r\n+20\r\n══\n50").parser.errors.length).equal(0);
-});
+  test('variables in expression', () => {
+    expect(parse(`test = ${INT}`).ast).equal([]);
+    expect(parse(`test = ${INT}\ntest\n+${INT}`).ast).haveLength(0);
+    expect(parse(`test = ${INT}\ntest\n+${INT}\n`).ast[0]).contain({
+      type: QwikTape.tokenType.Insert,
+      value: SUM.toLocaleString(),
+      node: any(Object)
+    });
+  });
 
-test('editing expression after result', () => {
-  expect(parse("12\n+12\r\n\r\n══\n24").parser.errors.length).equal(1);
-  expect(parse("12\n+12\r\n\n══\n24").parser.errors.length).equal(1);
-  expect(parse("12\n+12\r\n+\r\n══\n24").ast).equal([]);
-});
+  test('variable change in expression', () => {
+    expect(parse(`15\r\n+20\r\n══\r\n30 = test\r\ntest\r\n+20\r\n══\n50`).parser.errors.length).equal(0);
+  });
+
+  test('editing expression after result', () => {
+    expect(parse(`${INT}\n+${INT}\r\n\r\n══\n2469134.00`).parser.errors.length).equal(1);
+    expect(parse(`${INT}\n+${INT}\r\n\n══\n2469134.00`).parser.errors.length).equal(1);
+    expect(parse(`${INT}\n+${INT}\r\n+\r\n══\n2469134.00`).ast).equal([]);
+  });
+}, 
+
+  () => QwikTape.changeLocale(locale[TEST_LOCALE]) 
+
+);
+
+}
