@@ -16,11 +16,11 @@ export function test(name,func)
   parent.list.push({ name:name, run: func, id: "t" + (++counter), url:file }); 
 }
 
-export function testGroup(name, func) 
+export function testGroup(name, func, begin) 
 { 
   // group is a function that contains other unit test function declarations 
   let prevParent = parent;
-  parent = { name:name, list: [], id: "t" + (++counter), url:file};
+  parent = { name:name, list: [], id: "t" + (++counter), url:file, begin: begin};
   prevParent.list.push(parent);
   func();
   parent = prevParent;
@@ -62,6 +62,11 @@ export async function run(cbStart, cbEnd, cbGroupStart) {
   }
 
   async function runGroup(group) {
+    if(typeof group.begin === 'function'){
+      console.log("init group");
+      group.begin();
+    }
+
     cbGroupStart(group);
     for( let item of group.list ) {
       if(!item.selected) continue;

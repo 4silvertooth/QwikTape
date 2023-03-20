@@ -26,16 +26,16 @@
       body[state=ok]      > form { background:#d7ffbf; }
       body[state=fail]    > form { background:#ffc2bf; }
 
-      plaintext#log {
+      #log {
         size:*;
         overflow:auto;
       }
 
-      plaintext#log > text.fail { color:red; } 
-      plaintext#log > text.fail > span { background:red; color:white; }
-      plaintext#log > text.ok { color:green; }
-      plaintext#log > text.ok > span { background:green; color:white; }
-      plaintext#log > text.group { font-weight:bold; }
+      #log > text.fail { color:red; } 
+      #log > text.fail > span { background:red; color:white; }
+      #log > text.ok { color:green; }
+      #log > text.ok > span { background:green; color:white; }
+      #log > text.group { font-weight:bold; }
       
     </style>
     <script type="module">
@@ -77,7 +77,6 @@
         log = [];
 
         render() {
-
           return <body state={this.runState}>
             <button #run disabled={this.nselected == 0}>Run</button>
             <frameset rows="*,*">
@@ -85,7 +84,7 @@
                  <GroupOption item={UnitTest.root} />
               </select>
               <splitter/>
-              <plaintext #log state-reconciliation={true} readonly >{this.log}</plaintext>
+              <div #log state-reconciliation={true} >{this.log}</div>
             </frameset>
             <form>
               <span><label>succeeded</label><var>{this.succeeded}</var></span>
