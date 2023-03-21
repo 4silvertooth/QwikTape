@@ -26,16 +26,16 @@
       body[state=ok]      > form { background:#d7ffbf; }
       body[state=fail]    > form { background:#ffc2bf; }
 
-      #log {
+      plaintext#log {
         size:*;
         overflow:auto;
       }
 
-      #log > text.fail { color:red; } 
-      #log > text.fail > span { background:red; color:white; }
-      #log > text.ok { color:green; }
-      #log > text.ok > span { background:green; color:white; }
-      #log > text.group { font-weight:bold; }
+      plaintext#log > text.fail { color:red; } 
+      plaintext#log > text.fail > span { background:red; color:white; }
+      plaintext#log > text.ok { color:green; }
+      plaintext#log > text.ok > span { background:green; color:white; }
+      plaintext#log > text.group { font-weight:bold; }
       
     </style>
     <script type="module">
@@ -84,7 +84,7 @@
                  <GroupOption item={UnitTest.root} />
               </select>
               <splitter/>
-              <div #log state-reconciliation={true} >{this.log}</div>
+              <plaintext #log state-reconciliation={true} >{this.log}</plaintext>
             </frameset>
             <form>
               <span><label>succeeded</label><var>{this.succeeded}</var></span>
@@ -92,6 +92,10 @@
               <span><label>total</label><var>{this.total}</var></span>
             </form>
           </body>;
+        }
+
+        componentDidMount() {
+          this.$("plaintext#log").state.reconciliation = true;
         }
 
         ["on change at #list"](evt,list){
