@@ -22,6 +22,10 @@ function getTapesLocation(){
   return homePath;
 }
 
+export function getTapesDirectory(){
+  return URL.toPath(getTapesLocation()).dir;
+}
+
 let storage = DB.open(getTapesLocation(), true);
 let root = migrateDb(storage) || initDb(storage);
 

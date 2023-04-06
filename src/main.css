@@ -36,13 +36,19 @@
     cursor: pointer;
   }*/
 
-  :root > section.editor > button#settings:hover {
+  :root > section.editor > div.controls {
+    margin-left: *;
+    margin-right: 1em;
+    margin-top: 1em;
+  }
+
+  :root > section.editor > div.controls > button:hover {
     fill: black;
     background: rgba(0,0,0, 0.25);
     cursor: pointer;
   }
-
-  :root > section.editor > button#settings {
+  
+  :root > section.editor >  div.controls > button {
     width: 32dip;
     height: 32dip;
     background: 0;
@@ -50,11 +56,15 @@
     border-radius: 2dip;
     foreground-position: 50%;
     fill: gray;
-    foreground-size: 24dip 24dip;
-    foreground-image: url(assets/gear.svg);
-    margin-left: *;
-    margin-right: 1em;
-    margin-top: 1em;
+    foreground-size: 24dip 24dip;    
     padding: none;
+  }
+
+  :root > section.editor > div.controls  > #settings {
+    foreground-image: url(assets/gear.svg);
+  }
+  
+  :root > section.editor >  div.controls  > #pdf {
+    foreground-image: url(assets/pdf.svg);
   }
 }  

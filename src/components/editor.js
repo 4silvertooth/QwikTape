@@ -50,17 +50,37 @@ export class Editor extends Element {
       this.value = this.tape.text;
       this.postEvent(new Event("change", {bubbles: true}));
     }
-    this.onGlobalEvent("debug-show-parse", this.debugCallback );    
+
+    this.onGlobalEvent("to-pdf", (e)=>{
+      const val = {
+        tokens: this.lex.tokens,
+        size: this.state.box('dimension','content','self', false),
+      }
+      e.data(val);
+    });
+
+    this.onGlobalEvent("debug-show-parse", this.debugCallback );
   }
-  
+
+  componentWillUnmount() {
+    this.offGlobalEvent("to-pdf");
+    this.offGlobalEvent("debug-show-parse");
+  }
+
   debugCallback(evt){
     if(!evt.data) return;
-    const result = { 
-      lex: this.lex ?? '', 
-      ast: this.ast ?? '', 
-      parseErrors: parser.errors,
-    };
-    this.post(new Event("log", {bubbles: true, data: JSON.stringify(result, null, "  ")}));
+    if(parser.errors.length == 0){
+      const result = { 
+        lex: this.lex ?? '', 
+        ast: this.ast ?? '', 
+        parseErrors: parser.errors,
+      };
+      evt.data(JSON.stringify(result, null, "  "));      
+    }
+    else {
+      console.log(parser.errors)
+      evt.data(JSON.stringify(parser.errors.message(), null, "  "));
+    }
   }
   
   clearMark(line, startColumn, endColumn) {

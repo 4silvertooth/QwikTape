@@ -98,6 +98,7 @@ export class Theme extends Element
       <Color (editor-annotation)>Annotations</Color>
       <Color (editor-tooltip)>Info Bubble</Color>
       <Color (editor-paper)>Paper</Color>
+      <Color (editor-errors)>Errors</Color>
     </div>
   }
 

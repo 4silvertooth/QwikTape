@@ -22,8 +22,9 @@
 
 <script type="module">
   import { BigNumEnv } from "./parser/bignum.js";
-  import { Storage } from "./storage/storage.js";
+  import { Storage, getTapesDirectory } from "./storage/storage.js";
   import { Tabs, BrowseStorage, Editor, SettingsForm } from "./components/index.js";
+  import { toPdf, hasPdf } from "./util/pdf.js";
 
   class App extends Element {
     currentTape;
@@ -109,11 +110,30 @@
       this.componentUpdate({settings: evt.data});
     }
     
+    ["on click at :root section.editor > div.controls > #pdf"](evt, el)=>{
+      const name = this.currentTape.name;
+      const file = Window.this.selectFile({
+        mode: 'save',
+        filter: "PDF File (*.pdf, *.PDF)|*.pdf|All Files (*.*)|*.*",
+        caption: "Save PDF as",
+        path: `${name}.pdf`
+      });
+
+      if(!file) return;
+      
+      Window.post(new Event("to-pdf", { 
+        bubbles: true, 
+        data: (val)=>{
+          toPdf(val,URL.toPath(file))
+        }
+      }));
+    }
+    
     ["on click at :root > section.sidepanel > #close"](evt, el) {
       this.componentUpdate({browse: !this.browse});      
     }
 
-    ["on click at :root section.editor > #settings"](evt, el){
+    ["on click at :root section.editor > div.controls > #settings"](evt, el){
       this.componentUpdate({showSettings: true});
     }
     
@@ -131,7 +151,10 @@
         }
         <section.editor>
           <Editor tape={this.currentTape} settings={this.settings}/>
-          { !this.showSettings && <button #settings/> }
+          <div.controls>
+            { !this.showSettings && <button #settings/> }
+            { hasPdf() && <button #pdf/> }
+          </div>
         </section>
         { this.showSettings && <SettingsForm formData={this.settings}/> }
       </body>;

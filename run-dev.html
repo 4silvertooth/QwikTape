@@ -21,8 +21,6 @@
   const app = document.$("frame");
   const log = document.$("plaintext#tree");
 
-  Window.this.debugMode = false;
-
   async function saveAndLaunch(path, buffer){
     let file;
     try {
@@ -98,9 +96,13 @@
   })
   
   document.on("click", "button#generate", (evt, checkbox)=>{
-    log.value = "";
-    Window.this.debugMode = checkbox.value;
-    Window.post(new Event("debug-show-parse", { bubbles: true, data: Window.this.debugMode} ));
+    if(checkbox.value){
+      log.value = "";
+      Window.post(new Event("debug-show-parse", { bubbles: true, data: (value)=>{log.value = value}} ));
+    }
+    else {
+      log.value = "";
+    }
   })
   
   document.on("click", "button#build", async (evt, el)=>{
@@ -194,12 +196,6 @@
     if(!w)
       Window.this.modal(<alert>Error launching {url}</alert>);
   });
-
-
-  
-  app.on("log", (evt)=>{
-    log.value = evt.data;
-  })
   
 </script>
 
