@@ -1,6 +1,8 @@
 import { loadLibrary } from "@sciter";
 import { launch } from "@env";
 import * as sciter from "@sciter";
+import * as ENV from "@env";
+import * as SYS from "@sys";
 
 const PDF = loadLibrary("sciter-pdf");
 
@@ -142,6 +144,24 @@ const onNewPage = (token)=>{
   return false;  
 }
 
+const getFontPaths = (OS)=>{
+  
+  switch(OS){
+    case 'Windows': {
+      const fontsPath = `${SYS.getenv("windir")}\\Fonts\\`;
+      return [`${fontsPath}consola.ttf`,`${fontsPath}consolab.ttf`,`${fontsPath}consolai.ttf`];
+    } break;
+    case 'Linux': {
+      const fontsPath = `/usr/share/fonts/truetype/dejavu/`;
+      return [`${fontsPath}DejaVuSansMono.ttf`,`${fontsPath}DejaVuSansMono-Bold.ttf`,`${fontsPath}DejaVuSansMono.ttf`];
+    } break;
+    case 'OSX': {
+    } break;
+    default:
+    break;
+  }  
+}
+
 function toPdf(val, fileName){
   const { tokens, size } = val;
 
@@ -157,13 +177,10 @@ function toPdf(val, fileName){
   
   PDF.newDoc();
   let page = addStyledPaper(colors);
-  const monospace = PDF.loadTTFontFromFile("C:/Windows/Fonts/consola.ttf", true /*embed font*/);
-  const monospaceItalic = PDF.loadTTFontFromFile("C:/Windows/Fonts/consolai.ttf", true /*embed font*/);
-  const monospaceBold = PDF.loadTTFontFromFile("C:/Windows/Fonts/consolab.ttf", true /*embed font*/);
-
-  const regular = PDF.getFont(monospace, "UTF-8");
-  const italic = PDF.getFont(monospaceItalic, "UTF-8");
-  const bold = PDF.getFont(monospaceBold, "UTF-8");
+  const [monospace, monospaceBold, monospaceItalic] = getFontPaths(ENV.PLATFORM); 
+  const regular = PDF.getFont(PDF.loadTTFontFromFile(monospace, true), "UTF-8");
+  const bold = PDF.getFont(PDF.loadTTFontFromFile(monospaceBold, true), "UTF-8");
+  const italic = PDF.getFont(PDF.loadTTFontFromFile(monospaceItalic, true), "UTF-8");
 
   const fontSize = 10;
   page.setFontAndSize(regular, fontSize);
@@ -226,8 +243,6 @@ function toPdf(val, fileName){
     }
   })
   page.endText();
-  //page.createTextAnnot({left: 0, top: 0, right: 100, bottom: 100}, "Hello");
-  //page.createSquigglyAnnot({left: 0, top: 0, right: 100, bottom: 100}, "Hello Test");
   PDF.save(fileName);
   launch(fileName); 
 }
