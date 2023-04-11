@@ -57,8 +57,6 @@ BigNumEnv.initLocale = function(format = NUMBER_LOCALE_STRING){
 }
 
 BigNumEnv.getLocale = function(format){
-  //console.log("getLocale> format >", format);
-
   const match = /^\d{1,2}[^\d]?(\d{2,3})([^\d])?\d{3}([^\d])(\d+)$/m.exec(format);
   if(!match) {
     return null;

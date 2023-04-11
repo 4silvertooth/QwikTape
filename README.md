@@ -2,29 +2,20 @@
      alt="QwikTape logo by Viral Ghelani" width="144" height="166">
 Do calculations, annotate it like you would on a paper "qwikly".
 
-```js
-       100.00 my wallet balance
--       40.00 food
-  ═══════════
-        60.00
-```
-Create unlimited documents called tapes and switch between created tapes easily using browser like tabs.
-
 <img src="build/main-screen.png" width="750">
 
 # Features
-
-* Write text, calculate, annotate it like you would on a paper or in a book.
-* Never forget what was the calculation about by annotating it.
-* Do calculations like addition `+`, subtraction `-`, division `÷`, multiplication `×`, percentage `%` and power `^`.
-* Create unlimited tapes using [+] button in tabs bar, switch between tapes using tabs.
+* Write text, calculations, and annotations with the same ease as you would on paper or in a book.
+* Annotate your calculations to avoid forgetting what they were about.
+* Perform calculations such as addition <kbd>+</kbd>, subtraction <kbd>-</kbd>, division <kbd>÷</kbd>, multiplication <kbd>×</kbd>, percentage <kbd>%</kbd>, and power <kbd>^</kbd>.
+* Create unlimited tapes using `+` button in tabs bar, switch between tapes using browser like tabs.
 * View/Rename/Delete your saved tapes in the Bookmark menu, use the top left menu to view all tapes.
-* Tapes are auto saved.
+* Tapes will auto save, allowing you to pick up right where you left off.
 * The numbers will auto format and auto indented as you type.
-* Numbers are formatted according to the locale.
-* User can define variables and use it in calculations.
+* Numbers are formatted according to your locale.
+* You can define variables and use it in calculations.
 * Hover cursor over variables to check it's value.
-* Customize colors using the settings menu, number of decimals to use and indent length can be changed too.
+* Customize colors using the settings menu <img src="src/assets/gear.svg" width="20">, number of decimals to display and indent length can be changed too.
 * Tape calculation doesn't use operator precedence, the results will be as you would type it on a calculator. 
 ```
        1.00
@@ -34,8 +25,8 @@ Create unlimited documents called tapes and switch between created tapes easily 
        9.00
 ```
 * Expressions use operator precedence. `myvar = 1 + 2 × 3` myvar is `7`.
-* All the calculations are done with infinite precision, so [`0.1 + 0.2 = 0.3`](https://0.30000000000000004.com/)
-
+* All calculations are performed with infinite precision, resulting in highly accurate and reliable results, so [`0.1 + 0.2 = 0.3`](https://0.30000000000000004.com/)
+* Export your tape as PDF <img src="src/assets/pdf.svg" width="24">.
 
 <br></br>
 EITHER 
@@ -62,10 +53,15 @@ The logo is inspired by the [Rail-Road](build/railroad-diagram.htm) diagram the 
 
 Also inspired by [CalcTape](https://calctape.app/), [Numi](https://numi.app/), [Soulver](https://soulver.app/), [Calca](http://calca.io/)
 
-# Coming up.
-* i18n
-* Printing support
-* PDF export
+# Keyboard Shortcuts
+| | Windows/Linux | Mac |
+| :---:   | :---: | :---: |
+| New Tape | <kbd>Ctrl</kbd>+<kbd>T</kbd> | <kbd>&#8984;</kbd>+<kbd>T</kbd> |
+| New Tape | <kbd>Ctrl</kbd>+<kbd>N</kbd> | <kbd>&#8984;</kbd>+<kbd>N</kbd> |
+| Switch Tapes | <kbd>Ctrl</kbd>+<kbd>Tab</kbd> | <kbd>&#8984;</kbd>+<kbd>Tab</kbd> |
+| Close Tape | <kbd>Ctrl</kbd>+<kbd>W</kbd> | <kbd>&#8984;</kbd>+<kbd>W</kbd> |
+| Clear Tape | <kbd>ESC</kbd> * | <kbd>ESC</kbd> * |
+ *Select `Press ESC to clear tape content?` from settings to clear tape on pressing ESC. 
 
 # FAQ
 To execute linux binary after downloading use this command. 
@@ -78,6 +74,8 @@ To execute macosx binary use this command.
 sudo chmod +x qwiktape
 sudo xattr -d com.apple.quarantine qwiktape
 ```
+# Coming up.
+* i18n
 
 # Developers
 QwikTape uses awesome Sciter SDK for its gui and chevrotain for the parser,

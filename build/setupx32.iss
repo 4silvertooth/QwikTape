@@ -52,7 +52,7 @@ ArchitecturesInstallIn64BitMode="x64"
 
 [Files]
 Source: {#SourcePath}\windows\{#ARCH}\qwiktape.exe; DestDir: "{app}"; DestName: {#executable}
-Source: {#SourcePath}\windows\{#ARCH}\sciter-pdf.dll; DestDir: "{app}"; DestName: {#executable}
+Source: {#SourcePath}\windows\{#ARCH}\sciter-pdf.dll; DestDir: "{app}";
 Source: {#SourcePath}\..\sdk\bin\windows\{#ARCH}\sciter.dll; DestDir: "{app}"
 
 [Run]

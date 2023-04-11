@@ -84,7 +84,6 @@
 
     restoreWindowState() {
       const winPos = Storage.getWindowState();
-      console.log(winPos);
       if(winPos?.maximized){
         Window.this.state = Window.WINDOW_MAXIMIZED;
       }
@@ -185,10 +184,6 @@
       Storage.saveSettings(evt.data);
       BigNumEnv.setDecimalDigits(evt.data.decimalDigits);
       this.componentUpdate({settings: evt.data});
-    }
-    
-    ["on save-window-state"](evt){
-      console.log("evt data", evt.data);
     }
     
     ["on click at :root section.editor > div.controls > #pdf"](evt, el)=>{
