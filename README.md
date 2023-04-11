@@ -54,13 +54,14 @@ The logo is inspired by the [Rail-Road](build/railroad-diagram.htm) diagram the 
 Also inspired by [CalcTape](https://calctape.app/), [Numi](https://numi.app/), [Soulver](https://soulver.app/), [Calca](http://calca.io/)
 
 # Keyboard Shortcuts
-| | Windows/Linux | Mac |
+| | Windows/Linux | MacOs |
 | :---:   | :---: | :---: |
 | New Tape | <kbd>Ctrl</kbd>+<kbd>T</kbd> | <kbd>&#8984;</kbd>+<kbd>T</kbd> |
 | New Tape | <kbd>Ctrl</kbd>+<kbd>N</kbd> | <kbd>&#8984;</kbd>+<kbd>N</kbd> |
 | Switch Tapes | <kbd>Ctrl</kbd>+<kbd>Tab</kbd> | <kbd>&#8984;</kbd>+<kbd>Tab</kbd> |
 | Close Tape | <kbd>Ctrl</kbd>+<kbd>W</kbd> | <kbd>&#8984;</kbd>+<kbd>W</kbd> |
 | Clear Tape | <kbd>ESC</kbd> * | <kbd>ESC</kbd> * |
+
  *Select `Press ESC to clear tape content?` from settings to clear tape on pressing ESC. 
 
 # FAQ
