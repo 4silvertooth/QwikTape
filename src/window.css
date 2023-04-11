@@ -1,6 +1,7 @@
 html { 
   var(accent-color): window-accent-color; 
   border: window-frame-width solid transparent;
+  min-width: 400dip;
 }
 
 html:owns-focus {
@@ -11,7 +12,16 @@ html > header { width:*; background-color: #eee;}
 html > header { width:*; flow:horizontal; height:42dip; margin:0; } 
 
 html > header > window-caption { display:block; line-height:42dip; width:*; padding:0 1em; color:color(text-color); }
-html > header > window-buttons { display:block; flow:horizontal; width:max-content; height: window-caption-height; }
+html > header > window-buttons { 
+  display:block; 
+  position: fixed;
+  top: 0; 
+  left: *;
+  flow: horizontal; 
+  width:max-content; 
+  height: window-caption-height;
+  background-color: #eee;
+}
 html > header > window-buttons > window-button { 
   behavior:clickable;
   display:block; 

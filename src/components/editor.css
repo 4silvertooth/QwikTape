@@ -25,6 +25,12 @@
     stroke-width: 1px;
   }
   
+  @media window-width < 800dip {
+    :root {
+      margin: 24dip 1* 24dip 1*;
+    }
+  }
+  
   :root {
     background-size: 800px 25px;
     background-image: url(path:m0 0 800 0m0 -25);
@@ -71,7 +77,7 @@
   text::highlight(DefinedIdentifier), 
   text::highlight(UndefinedIdentifier), 
   text::highlight(Error) { 
-    text-decoration: wavy underline #f00;
+    text-decoration: wavy underline var(editor-errors);
     color: var(editor-errors);
   }
 

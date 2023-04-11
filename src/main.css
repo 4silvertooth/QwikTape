@@ -10,9 +10,10 @@
 
   :root > section.editor {
     size: *;
+    min-width: 0.25*;
     overflow: scroll-indicator;
     background: white;
-    flow: stack;
+    flow: horizontal;
   }
 
   :root > section.sidepanel {
@@ -40,6 +41,7 @@
     margin-left: *;
     margin-right: 1em;
     margin-top: 1em;
+    flow: vertical;
   }
 
   :root > section.editor > div.controls > button:hover {

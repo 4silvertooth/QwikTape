@@ -27,6 +27,7 @@ const env = {
   marginTop: 20,
   marginBottom: 20,
   errorStack: [],
+  colors: {}
 };
 
 const getLineCordinates = (token)=>{
@@ -64,7 +65,8 @@ const DrawToken = (page, token, color)=>{
     page.setRGBFill(color.r, color.g, color.b);
   }
   else {
-    page.setRGBFill(1.0, 0.0, 0.0);
+    color = env.colors['editor-errors'];
+    page.setRGBFill(color.r, color.g, color.b);
   }
   page.textRect(
     getTextCordinates(token),
@@ -174,6 +176,7 @@ function toPdf(val, fileName){
  
   env.atLine = 0;
   env.onPage = 1;
+  env.colors = colors;
   
   PDF.newDoc();
   let page = addStyledPaper(colors);
@@ -216,7 +219,6 @@ function toPdf(val, fileName){
       case 'DefinedIdentifier': 
       case 'UndefinedIdentifier': 
       case 'Error':
-        console.log(colors);
         DrawToken(page, token, colors['editor-errors']);
         DrawErrorLine(page, token, colors['editor-errors']);
       break;  

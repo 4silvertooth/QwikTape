@@ -4,7 +4,7 @@ import * as Sciter from "@sciter";
 import * as Sys from "@sys";
 import { BigNumEnv, NUMBER_LOCALE_STRING } from "../parser/bignum.js";
 
-const fileVersion = 2;
+const fileVersion = 3;
 const tapesFileName = "qwiktapes.db";
 const locale = BigNumEnv.getLocaleFormat() || NUMBER_LOCALE_STRING;
 
@@ -45,6 +45,7 @@ function initDb(storage) {
       'decimalDigits': 2,
       'padding': 12,
       'replaceOperator': true,
+      'escToClear': false,
       'colors': {
         'editor-text': '#000000',
         'editor-number': '#0000FF',
@@ -55,8 +56,15 @@ function initDb(storage) {
         'editor-tooltip': '#fff740',
         'editor-errors': '#ff0000',
         'editor-paper': '#fbfbf8',
-      },
-    } 
+      }
+    },
+    windowState: {
+      maximized: true,
+      x: 0,
+      y: 0,
+      w: 800,
+      h: 600,
+    }
   }
   seed(storage);
   return storage.root;
@@ -64,6 +72,7 @@ function initDb(storage) {
 
 function seed(storage){
   const { intro, tests } = Sciter.import("./seeds.js");
+  
   const helpTape = {
     id: Sciter.uuid(),
     name: "Introduction",
@@ -71,6 +80,12 @@ function seed(storage){
     freeze: true,
     locale: locale,
     text: intro,
+    caretAt: {
+      startLine: 0,
+      startOffset: 0,
+      endLine: 0,
+      endOffset: 0
+    }
   }
 
   const testTape = {
@@ -80,6 +95,12 @@ function seed(storage){
     freeze: false,
     locale: "1234567.89",
     text: tests,
+    caretAt: {
+      startLine: 0,
+      startOffset: 0,
+      endLine: 0,
+      endOffset: 0
+    }
   }
 
   storage.root.tapeById.set(helpTape.id, helpTape);
@@ -87,13 +108,12 @@ function seed(storage){
   storage.root.tapeById.set(testTape.id, testTape);
   storage.root.tapeByTimeStamp.set(testTape.timeStamp, testTape);
   storage.root.last = helpTape;
-  storage.root.recent.push(helpTape);  
+  storage.root.recent.push(helpTape);
 }
 
 function migrateDb(storage){
   if(!storage.root) return null;
   if(storage.root.version == 1){
-    storage.root.version = 2;
     storage.root.settings.decimalDigits = storage.root.settings.precision;
     storage.root.settings.locale = locale;
     delete storage.root.settings.precision;
@@ -103,8 +123,23 @@ function migrateDb(storage){
     for(var tape of storage.root.tapeByTimeStamp){
       tape.locale = "1234567.89";
     }
-    storage.commit();
+    storage.root.version = 2;    
   }
+  if(storage.root.version == 2){
+    storage.root.settings.escToClear = false;    
+    for(var tape of storage.root.tapeByTimeStamp){
+      tape.caretAt = {
+        startLine: 0,
+        startOffset: 0,
+        endLine: 0,
+        endOffset: 0
+      };
+    }
+    storage.root.windowState = {maximized: true, x:0, y:0, w:800, h:600};
+    storage.root.version = 3;
+  }
+
+  storage.commit();
   return storage.root;
 }
 
@@ -121,6 +156,7 @@ export class Storage {
   timeStamp;
   text;
   locale;
+  caretAt;
   
   constructor(text) {
     this.id = Sciter.uuid();
@@ -128,6 +164,12 @@ export class Storage {
     this.timeStamp = new Date();
     this.text = text;
     this.locale = locale;
+    this.caretAt = {
+      startLine: 0,
+      startOffset: 0,
+      endLine: 0,
+      endOffset: 0,
+    }
 
     root.tapeById.set(this.id, this);
     root.tapeByTimeStamp.set(this.timeStamp, this);
@@ -257,5 +299,13 @@ export class Storage {
       });
     }
     save(root.settings, value);
+  }
+  
+  static saveWindowState(data){
+    root.windowState = data;
+  }
+
+  static getWindowState(){
+    return root.windowState;
   }
 }

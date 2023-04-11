@@ -65,6 +65,13 @@ export class SettingsForm extends Element
           <option value={true}>YES</option>
           <option value={false}>NO</option>
         </select>
+
+        <label>Press ESC to clear tape content?</label>
+        <select as='auto' (escToClear)>
+          <option value={true}>YES</option>
+          <option value={false}>NO</option>
+        </select>
+
         <label>Editor color theme.</label>
         <Theme (colors)/>
       </form>

@@ -1,4 +1,4 @@
-﻿<html window-frame="extended" window-resizable="true" window-state="maximized" window-icon="assets/Icon.svg">
+﻿<html window-frame="extended" window-resizable="true" window-icon="assets/Icon.svg">
 <header>
   <window-caption role=window-caption>Tape</window-caption>
   <window-buttons>
@@ -13,8 +13,41 @@
 <script type="module">
   import { PLATFORM } from "@env";
   import { BigNumEnv } from "./parser/bignum.js";
-  Window.this.mediaVars({platform: PLATFORM});
   BigNumEnv.initLocale();
+
+  Window.this.mediaVars({platform: PLATFORM});
+  
+  function setMediaVars() {
+      const [x, y, w, h] = Window.this.box("xywh", "border", "screen", true);
+      Window.this.mediaVar("window-width", w);
+  }
+
+  function setWindowState() {
+      const [x, y, w, h] = Window.this.box("xywh", "border", "screen", true);
+      const maximized = Window.this.state == Window.WINDOW_MAXIMIZED;
+      
+      Window.this.mediaVar("window-width", w);
+      
+      Window.post(new Event("save-window-state", {
+        bubbles: true, 
+        data: {maximized, x, y, w, h}
+      }), true);
+  }
+
+  function saveWindowState() {
+    document.timer(1000, setWindowState);
+  }
+
+  Window.this
+    .on("move", saveWindowState)
+    .on("size", saveWindowState)
+    .on("size", setMediaVars);
+
+  document.on("beforeunload", function(){
+    Window.this.off(setMediaVars);
+    Window.this.off(saveWindowState);
+  });
+
 </script>
 
 <title>QwikTape</title>
@@ -24,7 +57,7 @@
   import { BigNumEnv } from "./parser/bignum.js";
   import { Storage, getTapesDirectory } from "./storage/storage.js";
   import { Tabs, BrowseStorage, Editor, SettingsForm } from "./components/index.js";
-  import { toPdf, hasPdf } from "./util/pdf.js";
+  import { hasPdf } from "./util/pdf.js";
 
   class App extends Element {
     currentTape;
@@ -33,16 +66,43 @@
 
     constructor(props) {
       super();
+      this.restoreWindowState();
       this.currentTape = Storage.currentTape();
       this.settings = Storage.getSettings() ?? {decimalDigits: 2, padding: 12};
     }
     
     componentDidMount(){
       this.tabs = document.$("header > window-caption");
+      this.onGlobalEvent("save-window-state", (evt)=>{
+        Storage.saveWindowState(evt.data);
+      });
+    }
+    
+    componentWillUnmount(){
+      this.off("save-window-state");
+    }
+
+    restoreWindowState() {
+      const winPos = Storage.getWindowState();
+      console.log(winPos);
+      if(winPos?.maximized){
+        Window.this.state = Window.WINDOW_MAXIMIZED;
+      }
+      else {
+        Window.this.move(winPos.x, winPos.y);
+        Window.this.move(winPos.x, winPos.y, winPos.w, winPos.h);
+      }  
     }
     
     refreshTabs(objdata){
       this.tabs.postEvent(new Event("refresh", {data: objdata}));      
+    }
+    
+    saveCaretPosition(){
+      const editor = this.$('plaintext#tape');
+      const [startLine, startOffset] = editor.plaintext.selectionStart;
+      const [endLine, endOffset] = editor.plaintext.selectionEnd;
+      this.currentTape.caretAt = {startLine, startOffset, endLine, endOffset};
     }
     
     ["on close-tape"](evt, el) {
@@ -65,13 +125,30 @@
     }
 
     ["on switch-tape"](evt)=>{
+      this.saveCaretPosition();
       const id = evt.data;
       const openTape = Storage.getById(id);
       this.componentUpdate({currentTape: openTape});
       this.refreshTabs({ activeId: openTape.id });
     }
 
+    ["on cycle-tape"](evt)=>{
+      this.saveCaretPosition();
+      let index = parseInt(evt.data);
+      const  recent = Storage.recent();
+      if( index >= recent.length -1 ) {
+        index = -1;
+      }
+      const nextTape = recent[index + 1];
+      this.componentUpdate({currentTape: nextTape});
+      this.refreshTabs({
+        recent: Storage.recent(),
+        activeId: nextTape.id,
+      });
+    }
+
     ["on open-tape"](evt)=>{
+      this.saveCaretPosition();
       const id = evt.data;
       const openTape = Storage.getById(id);
       this.componentUpdate({currentTape: openTape});
@@ -110,6 +187,10 @@
       this.componentUpdate({settings: evt.data});
     }
     
+    ["on save-window-state"](evt){
+      console.log("evt data", evt.data);
+    }
+    
     ["on click at :root section.editor > div.controls > #pdf"](evt, el)=>{
       const name = this.currentTape.name;
       const file = Window.this.selectFile({
@@ -121,12 +202,8 @@
 
       if(!file) return;
       
-      Window.post(new Event("to-pdf", { 
-        bubbles: true, 
-        data: (val)=>{
-          toPdf(val,URL.toPath(file))
-        }
-      }));
+      const editor = this.$(":root > .editor > plaintext");
+      editor.exportPdf(URL.toPath(file));
     }
     
     ["on click at :root > section.sidepanel > #close"](evt, el) {
@@ -139,6 +216,47 @@
     
     ["on settings-close"](evt, el){
       this.componentUpdate({showSettings: false});    
+    }
+    
+    ["on ^keydown at :root"](evt, el){
+      if(evt.ctrlKey){
+        switch(evt.code){
+          case 'KeyW':
+            this.postEvent(new Event("close-tape", {bubbles: true, data: this.tabs.currentIndex}));
+            return;
+          break;
+          case 'KeyT':
+          case 'KeyN':
+            this.postEvent(new Event("add-tape", {bubbles: true}));
+          break;
+          case 'Tab':
+            this.postEvent(new Event("cycle-tape", {bubbles: true, data: this.tabs.currentIndex}));            
+          break;
+          default:
+          break;
+        }
+        
+        return true;
+      }
+    }
+
+    ["on keydown at :root"](evt, el){
+      if(evt.code !== 'Escape') return;
+
+      let reply = Window.this.modal(
+        <alert caption={'qwiktape'}>
+          <content>Exiting qwiktape?</content>
+          <buttons>
+             <button id="yes" role="default-button" accesskey="!KeyY">Yes</button>
+             <button id="no" role="cancel-button" accesskey="!KeyN">No</button>
+          </buttons>
+        </alert>
+      );
+      
+      if(reply === "yes") {
+        this.post(() => Window.this.close());
+        return true;
+      }
     }
 
     render(props,kids){

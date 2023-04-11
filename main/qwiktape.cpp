@@ -10,6 +10,7 @@ public:
 #include "resources.cpp"
 
 int uimain(std::function<int()> run ) {
+  SciterSetOption(NULL, SCITER_EXTENDED_TOUCHPAD_SUPPORT, FALSE);
   SciterSetOption(NULL, SCITER_SET_SCRIPT_RUNTIME_FEATURES,
                           ALLOW_FILE_IO |
                           ALLOW_SOCKET_IO |

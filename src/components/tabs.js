@@ -27,6 +27,11 @@
    gfx.popLayer();
   }
   
+  get currentIndex(){
+    const el = this.$('div[key][active=true]');
+    return el.getAttribute("index");
+  }
+  
   ["on refresh"](evt, el){
     this.componentUpdate(evt.data);
   }
@@ -52,7 +57,7 @@
     return <window-caption role="window-caption" styleset={__DIR__ + "tabs.css#tabs"}>
       <button #bookmarks/>
       {this.recent?.map((tape, index)=>{
-        return <div.shell-icon filename=".txt" key={tape.id} active={tape.id === this.activeId}>
+        return <div.shell-icon filename=".txt" index={index} key={tape.id} active={tape.id === this.activeId}>
           <span.name>{tape.name}</span>
           {this.recent.length > 1 && <button #close key={index}>&nbsp;</button>}
         </div>

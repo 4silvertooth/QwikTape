@@ -10,6 +10,12 @@
     font-size: 10pt;
     vertical-align: middle;
   }
+
+  /*@media window-width < 500dip {
+    :root > div {
+      visibility: none;
+    }
+  }*/
   
   :root > .shell-icon {
     behavior: shell-icon;

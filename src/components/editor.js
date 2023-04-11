@@ -1,5 +1,6 @@
 import * as sciter from "@sciter";
 import { BigNumEnv } from "../parser/bignum.js";
+import { toPdf } from "../util/pdf.js";
 
 const { QwikTape } = sciter.import("../parser/tape-embedded.js");
 const { lexer, parser, tokenType } = QwikTape;
@@ -36,7 +37,8 @@ export class Editor extends Element {
       this.postEvent(new Event("change", {bubbles: true}));
       if(lastId !== this.tape.id) //set caret if new document 
         this.post(()=>{
-          this.state.focus = true;
+          const {startLine, startOffset, endLine, endOffset} = this.tape.caretAt
+          this.setCaretPos(startLine, startOffset, endLine, endOffset);
         });
     }
     if(props.settings.colors){
@@ -46,40 +48,40 @@ export class Editor extends Element {
 
   componentDidMount() {
     if(this.tape) {
-      this.state.focus = true;
+      const {startLine, startOffset, endLine, endOffset} = this.tape.caretAt
+      this.setCaretPos(startLine, startOffset, endLine, endOffset);
       this.value = this.tape.text;
       this.postEvent(new Event("change", {bubbles: true}));
     }
-
-    this.onGlobalEvent("to-pdf", (e)=>{
-      const val = {
-        tokens: this.lex.tokens,
-        size: this.state.box('dimension','content','self', false),
-      }
-      e.data(val);
-    });
-
     this.onGlobalEvent("debug-show-parse", this.debugCallback );
   }
 
   componentWillUnmount() {
-    this.offGlobalEvent("to-pdf");
     this.offGlobalEvent("debug-show-parse");
+  }
+  
+  exportPdf(path){
+    const val = {
+      tokens: this.lex.tokens,
+      size: this.state.box('dimension','content','self', false),
+    }
+    toPdf(val, path);
   }
 
   debugCallback(evt){
-    if(!evt.data) return;
+    if(!typeof evt.data === 'function') return;
+    const callback = evt.data;
     if(parser.errors.length == 0){
       const result = { 
         lex: this.lex ?? '', 
         ast: this.ast ?? '', 
         parseErrors: parser.errors,
       };
-      evt.data(JSON.stringify(result, null, "  "));      
+      callback(JSON.stringify(result, null, "  "));
     }
     else {
       console.log(parser.errors)
-      evt.data(JSON.stringify(parser.errors.message(), null, "  "));
+      callback(JSON.stringify(parser.errors.message(), null, "  "));
     }
   }
   
@@ -304,6 +306,11 @@ export class Editor extends Element {
     this.value = tape.text;
   }*/
   
+  setCaretPos(startLine, startOffset, endLine, endOffset){
+    this.state.focus  = true;
+    this.plaintext.selectRange(startLine, startOffset, endLine, endOffset);
+  }
+  
   ["on save-update"](evt, editor){
     this.tape.text = this.value;
   }
@@ -361,10 +368,25 @@ export class Editor extends Element {
     }    
   }
   
+  #allowedKeys = ['Enter', 'NumpadEnter', 'Backspace', 'Delete', 'Escape'];
   ["on ^keydown at :root"](evt, editor){
-    const allowedKeys = ['Enter', 'NumpadEnter', 'Backspace', 'Delete'];
-    if(!allowedKeys.includes(evt.code)) return;
+    if(evt.ctrlKey) return;
+    if(!this.#allowedKeys.includes(evt.code)) return;
     
+    if(evt.code === 'Escape'){
+      if(this.settings.escToClear != true) return;
+      if(this.value === "") return;
+      this.plaintext.update( (transact) => {
+        this.plaintext.selectAll();
+        transact.deleteSelection();
+        return true;
+      });
+
+      this.setCaretPos(0, 0, 0, 0);
+      this.postEvent(new Event("change", {bubbles: true}));        
+      return true;
+    }
+
     if(evt.code === 'Enter' || evt.code === 'NumpadEnter'){
       this.postEvent( new Event('checkForResults', { bubbles: true, data:this.plaintext.selectionStart }) );
       return;
