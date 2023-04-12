@@ -49,9 +49,9 @@ export class Editor extends Element {
   componentDidMount() {
     if(this.tape) {
       const {startLine, startOffset, endLine, endOffset} = this.tape.caretAt
-      this.setCaretPos(startLine, startOffset, endLine, endOffset);
       this.value = this.tape.text;
       this.postEvent(new Event("change", {bubbles: true}));
+      this.post(()=>this.setCaretPos(startLine, startOffset, endLine, endOffset));
     }
     this.onGlobalEvent("debug-show-parse", this.debugCallback );
   }
