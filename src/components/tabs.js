@@ -59,7 +59,7 @@
       {this.recent?.map((tape, index)=>{
         return <div.shell-icon filename=".txt" index={index} key={tape.id} active={tape.id === this.activeId}>
           <span.name>{tape.name}</span>
-          {this.recent.length > 1 && <button #close key={index}>&nbsp;</button>}
+          {this.recent.length > 1 && <button #close key={index}></button>}
         </div>
       })}
     <button #add/>

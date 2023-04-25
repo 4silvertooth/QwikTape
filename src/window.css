@@ -55,6 +55,14 @@ html > header > window-buttons > window-button[role="window-minimize"] { foregro
     padding-top: window-caption-height;
     background: #000;
   }
+  
+  html > header > window-caption {
+    line-height: window-caption-height;
+  }
+
+  html > header > window-caption > #bookmarks {
+    margin-top: window-caption-height;
+  }
 }
 
 .logo-background-text {

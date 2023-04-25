@@ -11,11 +11,11 @@ const locale = BigNumEnv.getLocaleFormat() || NUMBER_LOCALE_STRING;
 function getTapesLocation(){
   const homePath = Env.home(tapesFileName);
   const documentPath = Env.path("documents");
-
-  if(Sys.fs.sync.stat(homePath)?.isFile) {
+  console.log(homePath, documentPath);
+  if(Sys.fs.sync?.stat(homePath)?.isFile) {
     return homePath;
   }
-  else if(Sys.fs.sync.stat(documentPath)?.isDirectory) {
+  else if(Sys.fs.sync?.stat(documentPath)?.isDirectory) {
     return Env.path("documents", tapesFileName);
   }
 
