@@ -2,3 +2,5 @@
 .vs
 main/resources.cpp
 *.aps
+.DS_Store
+*.swp
