@@ -228,7 +228,7 @@
             this.postEvent(new Event("cycle-tape", {bubbles: true, data: this.tabs.currentIndex}));            
           break;
           default:
-          break;
+            return;
         }
         
         return true;
