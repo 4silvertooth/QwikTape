@@ -18,8 +18,6 @@
 <script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/diagrams_behavior.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/main.js'></script>
 
-<div id="diagrams" align="center"></div>    
-
 <script>
     window.serializedGrammar = [
   {
@@ -671,10 +669,12 @@
 ];
 </script>
 
+</head>
+<body>
+<div id="diagrams" align="center"></div>
 <script>
     var diagramsDiv = document.getElementById("diagrams");
     main.drawDiagramsFromSerializedGrammar(serializedGrammar, diagramsDiv);
 </script>
-</head>
-<body></body>
+</body>
 </html>
