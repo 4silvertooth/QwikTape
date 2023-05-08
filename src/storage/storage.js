@@ -12,10 +12,10 @@ function getTapesLocation(){
   const homePath = Env.home(tapesFileName);
   const documentPath = Env.path("documents");
   console.log(homePath, documentPath);
-  if(Sys.fs.sync?.stat(homePath)?.isFile) {
+  if(Sys.fs.$stat(homePath)?.isFile) {
     return homePath;
   }
-  else if(Sys.fs.sync?.stat(documentPath)?.isDirectory) {
+  else if(Sys.fs.$stat(documentPath)?.isDirectory) {
     return Env.path("documents", tapesFileName);
   }
 
