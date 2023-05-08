@@ -2,126 +2,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-
-<style>
-  body {
-    background-color: hsl(30, 20%, 95%)
-  }
-</style>
-
-
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/diagrams.css'>
-
-<script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/vendor/railroad-diagrams.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/diagrams_builder.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/diagrams_behavior.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/main.js'></script>
-
-<script>
-    window.serializedGrammar = [
-  {
-    "type": "Rule",
-    "name": "tape",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Repetition",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "NewLine",
-            "label": "↵",
-            "idx": 0,
-            "pattern": "\\r?\\n"
-          }
-        ]
-      },
-      {
-        "type": "Repetition",
-        "idx": 2,
-        "definition": [
-          {
-            "type": "NonTerminal",
-            "name": "rows",
-            "idx": 0
-          }
-        ]
+    <meta charset="utf-8">
+    <style>
+      body {
+        background-color: hsl(30, 20%, 95%)
       }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "rows",
-    "orgText": "",
-    "definition": [
+    </style>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/diagrams.css'>
+</head>
+
+<body>
+
+    <script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/vendor/railroad-diagrams.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/diagrams_builder.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/diagrams_behavior.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/chevrotain/diagrams/src/main.js'></script>
+
+    <script>
+        window.serializedGrammar = [
       {
-        "type": "Alternation",
-        "idx": 0,
+        "type": "Rule",
+        "name": "tape",
+        "orgText": "",
         "definition": [
           {
-            "type": "Alternative",
-            "definition": [
-              {
-                "type": "NonTerminal",
-                "name": "assign",
-                "idx": 0
-              }
-            ]
-          },
-          {
-            "type": "Alternative",
-            "definition": [
-              {
-                "type": "NonTerminal",
-                "name": "expression",
-                "idx": 0
-              }
-            ]
-          },
-          {
-            "type": "Alternative",
+            "type": "Repetition",
+            "idx": 0,
             "definition": [
               {
                 "type": "Terminal",
-                "name": "Text",
-                "label": "Text",
+                "name": "NewLine",
+                "label": "↵",
                 "idx": 0,
-                "pattern": ".+"
+                "pattern": "\\r?\\n"
+              }
+            ]
+          },
+          {
+            "type": "Repetition",
+            "idx": 2,
+            "definition": [
+              {
+                "type": "NonTerminal",
+                "name": "rows",
+                "idx": 0
               }
             ]
           }
         ]
       },
       {
-        "type": "Repetition",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "NewLine",
-            "label": "↵",
-            "idx": 2,
-            "pattern": "\\r?\\n"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "expression",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "NonTerminal",
-        "name": "atom",
-        "idx": 0
-      },
-      {
-        "type": "Repetition",
-        "idx": 0,
+        "type": "Rule",
+        "name": "rows",
+        "orgText": "",
         "definition": [
           {
             "type": "Alternation",
@@ -132,17 +65,7 @@
                 "definition": [
                   {
                     "type": "NonTerminal",
-                    "name": "op",
-                    "idx": 0
-                  },
-                  {
-                    "type": "NonTerminal",
-                    "name": "quark",
-                    "idx": 0
-                  },
-                  {
-                    "type": "NonTerminal",
-                    "name": "postfix",
+                    "name": "assign",
                     "idx": 0
                   }
                 ]
@@ -152,205 +75,337 @@
                 "definition": [
                   {
                     "type": "NonTerminal",
-                    "name": "aggregate",
+                    "name": "expression",
                     "idx": 0
                   }
                 ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "NewLine",
-            "label": "↵",
-            "idx": 0,
-            "pattern": "\\r?\\n"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "op",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "NewLine",
-            "label": "↵",
-            "idx": 0,
-            "pattern": "\\r?\\n"
-          }
-        ]
-      },
-      {
-        "type": "Terminal",
-        "name": "Operator",
-        "label": "+|-|*|×|/|÷|^",
-        "idx": 0,
-        "pattern": "NOT_APPLICABLE"
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "postfix",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "Percentage",
-            "label": "'%' ⥱ value?",
-            "idx": 0
-          }
-        ]
-      },
-      {
-        "type": "Option",
-        "idx": 2,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "Annotation",
-            "label": "Annotation",
-            "idx": 0,
-            "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "assign",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Terminal",
-        "name": "Variable",
-        "label": "Variable",
-        "idx": 0,
-        "pattern": "[a-zA-Z]\\w*(?=[ \\t]*\\=)"
-      },
-      {
-        "type": "Terminal",
-        "name": "Equal",
-        "label": "=",
-        "idx": 0,
-        "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*)="
-      },
-      {
-        "type": "NonTerminal",
-        "name": "inlineExpression",
-        "idx": 0
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "inlineExpression",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "NonTerminal",
-        "name": "sumExpression",
-        "idx": 0
-      },
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "Annotation",
-            "label": "Annotation",
-            "idx": 0,
-            "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "sumExpression",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "NonTerminal",
-        "name": "productExpression",
-        "idx": 0
-      },
-      {
-        "type": "Repetition",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "Sums",
-            "label": "+|-",
-            "idx": 0,
-            "pattern": "NOT_APPLICABLE"
-          },
-          {
-            "type": "NonTerminal",
-            "name": "productExpression",
-            "idx": 2
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "productExpression",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "NonTerminal",
-        "name": "powerExpression",
-        "idx": 0
-      },
-      {
-        "type": "Repetition",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Alternation",
-            "idx": 0,
-            "definition": [
+              },
               {
                 "type": "Alternative",
                 "definition": [
                   {
                     "type": "Terminal",
-                    "name": "Products",
-                    "label": "*|×|/|÷",
+                    "name": "Text",
+                    "label": "Text",
                     "idx": 0,
-                    "pattern": "NOT_APPLICABLE"
-                  },
-                  {
-                    "type": "NonTerminal",
-                    "name": "powerExpression",
-                    "idx": 2
+                    "pattern": ".+"
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "type": "Repetition",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "NewLine",
+                "label": "↵",
+                "idx": 2,
+                "pattern": "\\r?\\n"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "expression",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "atom",
+            "idx": 0
+          },
+          {
+            "type": "Repetition",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Alternation",
+                "idx": 0,
+                "definition": [
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "NonTerminal",
+                        "name": "op",
+                        "idx": 0
+                      },
+                      {
+                        "type": "NonTerminal",
+                        "name": "quark",
+                        "idx": 0
+                      },
+                      {
+                        "type": "NonTerminal",
+                        "name": "postfix",
+                        "idx": 0
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "NonTerminal",
+                        "name": "aggregate",
+                        "idx": 0
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Option",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "NewLine",
+                "label": "↵",
+                "idx": 0,
+                "pattern": "\\r?\\n"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "op",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "Option",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "NewLine",
+                "label": "↵",
+                "idx": 0,
+                "pattern": "\\r?\\n"
+              }
+            ]
+          },
+          {
+            "type": "Terminal",
+            "name": "Operator",
+            "label": "+|-|*|×|/|÷|^",
+            "idx": 0,
+            "pattern": "NOT_APPLICABLE"
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "postfix",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "Option",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Percentage",
+                "label": "'%' ⥱ value?",
+                "idx": 0
+              }
+            ]
+          },
+          {
+            "type": "Option",
+            "idx": 2,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Annotation",
+                "label": "Annotation",
+                "idx": 0,
+                "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "assign",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "Terminal",
+            "name": "Variable",
+            "label": "Variable",
+            "idx": 0,
+            "pattern": "[a-zA-Z]\\w*(?=[ \\t]*\\=)"
+          },
+          {
+            "type": "Terminal",
+            "name": "Equal",
+            "label": "=",
+            "idx": 0,
+            "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*)="
+          },
+          {
+            "type": "NonTerminal",
+            "name": "inlineExpression",
+            "idx": 0
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "inlineExpression",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "sumExpression",
+            "idx": 0
+          },
+          {
+            "type": "Option",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Annotation",
+                "label": "Annotation",
+                "idx": 0,
+                "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "sumExpression",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "productExpression",
+            "idx": 0
+          },
+          {
+            "type": "Repetition",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Sums",
+                "label": "+|-",
+                "idx": 0,
+                "pattern": "NOT_APPLICABLE"
               },
+              {
+                "type": "NonTerminal",
+                "name": "productExpression",
+                "idx": 2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "productExpression",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "powerExpression",
+            "idx": 0
+          },
+          {
+            "type": "Repetition",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Alternation",
+                "idx": 0,
+                "definition": [
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "Products",
+                        "label": "*|×|/|÷",
+                        "idx": 0,
+                        "pattern": "NOT_APPLICABLE"
+                      },
+                      {
+                        "type": "NonTerminal",
+                        "name": "powerExpression",
+                        "idx": 2
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "NonTerminal",
+                        "name": "parenthesis",
+                        "idx": 0
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "powerExpression",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "inlineAtom",
+            "idx": 0
+          },
+          {
+            "type": "Repetition",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Power",
+                "label": "^",
+                "idx": 0,
+                "pattern": "\\^"
+              },
+              {
+                "type": "NonTerminal",
+                "name": "inlineAtom",
+                "idx": 2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "inlineAtom",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "Alternation",
+            "idx": 0,
+            "definition": [
               {
                 "type": "Alternative",
                 "definition": [
@@ -360,136 +415,128 @@
                     "idx": 0
                   }
                 ]
+              },
+              {
+                "type": "Alternative",
+                "definition": [
+                  {
+                    "type": "NonTerminal",
+                    "name": "quark",
+                    "idx": 0
+                  }
+                ]
               }
             ]
           }
         ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "powerExpression",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "NonTerminal",
-        "name": "inlineAtom",
-        "idx": 0
       },
       {
-        "type": "Repetition",
-        "idx": 0,
+        "type": "Rule",
+        "name": "parenthesis",
+        "orgText": "",
         "definition": [
           {
             "type": "Terminal",
-            "name": "Power",
-            "label": "^",
+            "name": "LParen",
+            "label": "(",
             "idx": 0,
-            "pattern": "\\^"
+            "pattern": "\\("
           },
           {
             "type": "NonTerminal",
-            "name": "inlineAtom",
-            "idx": 2
+            "name": "inlineExpression",
+            "idx": 0
+          },
+          {
+            "type": "Terminal",
+            "name": "RParen",
+            "label": ")",
+            "idx": 0,
+            "pattern": "\\)"
           }
         ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "inlineAtom",
-    "orgText": "",
-    "definition": [
+      },
       {
-        "type": "Alternation",
-        "idx": 0,
+        "type": "Rule",
+        "name": "aggregate",
+        "orgText": "",
         "definition": [
           {
-            "type": "Alternative",
+            "type": "Terminal",
+            "name": "NewLine",
+            "label": "↵",
+            "idx": 0,
+            "pattern": "\\r?\\n"
+          },
+          {
+            "type": "Terminal",
+            "name": "Seperator",
+            "label": "Seperator",
+            "idx": 0,
+            "pattern": "═+"
+          },
+          {
+            "type": "Terminal",
+            "name": "NewLine",
+            "label": "↵",
+            "idx": 2,
+            "pattern": "\\r?\\n"
+          },
+          {
+            "type": "NonTerminal",
+            "name": "factor",
+            "idx": 0
+          },
+          {
+            "type": "Option",
+            "idx": 0,
             "definition": [
               {
-                "type": "NonTerminal",
-                "name": "parenthesis",
-                "idx": 0
+                "type": "Alternation",
+                "idx": 0,
+                "definition": [
+                  {
+                    "type": "Alternative",
+                    "definition": [
+                      {
+                        "type": "Terminal",
+                        "name": "Equal",
+                        "label": "=",
+                        "idx": 0,
+                        "pattern": "(?<=═\\s?\\n.*)="
+                      },
+                      {
+                        "type": "Terminal",
+                        "name": "SuffixIdentifier",
+                        "label": "SuffixIdentifier",
+                        "idx": 0,
+                        "pattern": "(?<=═\\s?\\n.*=[ \\t]*)[a-zA-Z]\\w*"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
           {
-            "type": "Alternative",
+            "type": "Option",
+            "idx": 2,
             "definition": [
               {
-                "type": "NonTerminal",
-                "name": "quark",
-                "idx": 0
+                "type": "Terminal",
+                "name": "Annotation",
+                "label": "Annotation",
+                "idx": 0,
+                "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
               }
             ]
           }
         ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "parenthesis",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Terminal",
-        "name": "LParen",
-        "label": "(",
-        "idx": 0,
-        "pattern": "\\("
       },
       {
-        "type": "NonTerminal",
-        "name": "inlineExpression",
-        "idx": 0
-      },
-      {
-        "type": "Terminal",
-        "name": "RParen",
-        "label": ")",
-        "idx": 0,
-        "pattern": "\\)"
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "aggregate",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Terminal",
-        "name": "NewLine",
-        "label": "↵",
-        "idx": 0,
-        "pattern": "\\r?\\n"
-      },
-      {
-        "type": "Terminal",
-        "name": "Seperator",
-        "label": "Seperator",
-        "idx": 0,
-        "pattern": "═+"
-      },
-      {
-        "type": "Terminal",
-        "name": "NewLine",
-        "label": "↵",
-        "idx": 2,
-        "pattern": "\\r?\\n"
-      },
-      {
-        "type": "NonTerminal",
-        "name": "factor",
-        "idx": 0
-      },
-      {
-        "type": "Option",
-        "idx": 0,
+        "type": "Rule",
+        "name": "quark",
+        "orgText": "",
         "definition": [
           {
             "type": "Alternation",
@@ -499,18 +546,19 @@
                 "type": "Alternative",
                 "definition": [
                   {
-                    "type": "Terminal",
-                    "name": "Equal",
-                    "label": "=",
-                    "idx": 0,
-                    "pattern": "(?<=═\\s?\\n.*)="
-                  },
+                    "type": "NonTerminal",
+                    "name": "factor",
+                    "idx": 0
+                  }
+                ]
+              },
+              {
+                "type": "Alternative",
+                "definition": [
                   {
-                    "type": "Terminal",
-                    "name": "SuffixIdentifier",
-                    "label": "SuffixIdentifier",
-                    "idx": 0,
-                    "pattern": "(?<=═\\s?\\n.*=[ \\t]*)[a-zA-Z]\\w*"
+                    "type": "NonTerminal",
+                    "name": "var",
+                    "idx": 0
                   }
                 ]
               }
@@ -519,162 +567,112 @@
         ]
       },
       {
-        "type": "Option",
-        "idx": 2,
+        "type": "Rule",
+        "name": "atom",
+        "orgText": "",
         "definition": [
           {
-            "type": "Terminal",
-            "name": "Annotation",
-            "label": "Annotation",
-            "idx": 0,
-            "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "quark",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Alternation",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Alternative",
-            "definition": [
-              {
-                "type": "NonTerminal",
-                "name": "factor",
-                "idx": 0
-              }
-            ]
+            "type": "NonTerminal",
+            "name": "quark",
+            "idx": 0
           },
           {
-            "type": "Alternative",
-            "definition": [
-              {
-                "type": "NonTerminal",
-                "name": "var",
-                "idx": 0
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "atom",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "NonTerminal",
-        "name": "quark",
-        "idx": 0
-      },
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "Annotation",
-            "label": "Annotation",
+            "type": "Option",
             "idx": 0,
-            "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "var",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "Minus",
-            "label": "-",
-            "idx": 0,
-            "pattern": "(?<!([-\\+\\*×\\/÷][ \\t]*)|═(\\r?\\n[ \\t]*))-"
-          }
-        ]
-      },
-      {
-        "type": "Alternation",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Alternative",
             "definition": [
               {
                 "type": "Terminal",
-                "name": "Identifier",
-                "label": "Identifier",
+                "name": "Annotation",
+                "label": "Annotation",
                 "idx": 0,
-                "pattern": "(?<=[=\\(\\-\\+\\*×\\/÷\\^][ \\t]*)[a-zA-Z]\\w*"
+                "pattern": "(?<=[a-zA-Z]\\w*[ \\t]*=.*)[^\\n]+|(?<=[\\w\\d]+%?[ \\t]*)[^\\)\\+\\-\\*×\\/\\÷\\r]+"
               }
             ]
-          },
-          {
-            "type": "Alternative",
-            "definition": [
-              {
-                "type": "Terminal",
-                "name": "Identifier",
-                "label": "Defined Identifier",
-                "idx": 2
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "Rule",
-    "name": "factor",
-    "orgText": "",
-    "definition": [
-      {
-        "type": "Option",
-        "idx": 0,
-        "definition": [
-          {
-            "type": "Terminal",
-            "name": "Minus",
-            "label": "-",
-            "idx": 0,
-            "pattern": "(?<!([-\\+\\*×\\/÷][ \\t]*)|═(\\r?\\n[ \\t]*))-"
           }
         ]
       },
       {
-        "type": "Terminal",
-        "name": "NumberLiteral",
-        "label": "NumberLiteral",
-        "idx": 0
+        "type": "Rule",
+        "name": "var",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "Option",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Minus",
+                "label": "-",
+                "idx": 0,
+                "pattern": "(?<!([-\\+\\*×\\/÷][ \\t]*)|═(\\r?\\n[ \\t]*))-"
+              }
+            ]
+          },
+          {
+            "type": "Alternation",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Alternative",
+                "definition": [
+                  {
+                    "type": "Terminal",
+                    "name": "Identifier",
+                    "label": "Identifier",
+                    "idx": 0,
+                    "pattern": "(?<=[=\\(\\-\\+\\*×\\/÷\\^][ \\t]*)[a-zA-Z]\\w*"
+                  }
+                ]
+              },
+              {
+                "type": "Alternative",
+                "definition": [
+                  {
+                    "type": "Terminal",
+                    "name": "Identifier",
+                    "label": "Defined Identifier",
+                    "idx": 2
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Rule",
+        "name": "factor",
+        "orgText": "",
+        "definition": [
+          {
+            "type": "Option",
+            "idx": 0,
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Minus",
+                "label": "-",
+                "idx": 0,
+                "pattern": "(?<!([-\\+\\*×\\/÷][ \\t]*)|═(\\r?\\n[ \\t]*))-"
+              }
+            ]
+          },
+          {
+            "type": "Terminal",
+            "name": "NumberLiteral",
+            "label": "NumberLiteral",
+            "idx": 0
+          }
+        ]
       }
-    ]
-  }
-];
-</script>
+    ];
+    </script>
 
-</head>
-<body>
-<div id="diagrams" align="center"></div>
-<script>
-    var diagramsDiv = document.getElementById("diagrams");
-    main.drawDiagramsFromSerializedGrammar(serializedGrammar, diagramsDiv);
-</script>
+    <div id="diagrams" align="center"></div>
+    <script>
+        var diagramsDiv = document.getElementById("diagrams");
+        main.drawDiagramsFromSerializedGrammar(serializedGrammar, diagramsDiv);
+    </script>
 </body>
 </html>
