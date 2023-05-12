@@ -418,10 +418,24 @@ export class Editor extends Element {
   // const CHANGE_BY_UNDO_REDO = 4;
   // const CHANGE_BY_INS_CONSECUTIVE_CHAR = 5; // single char insertion, previous character was inserted in previous position  
   // const CHANGE_BY_CODE = 6; 
-  
+
+  ["on changing at :root"](evt, editor){
+    if(!evt.data && this.settings.replaceOperator != true) 
+      return;
+
+    if(evt.data === '*'){
+      evt.data = '×';
+      return true;
+    }  
+    else if(evt.data === '/') {
+      evt.data = '÷';
+      return true;
+    }
+  }
+
   ["on ^change at :root"](evt, editor){
     if(evt.reason == 4) return;
-    if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator == true) {
+    /*if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator == true) {
       let [line, offset] = editor.plaintext.selectionStart;
       const textNode = editor.children[line]?.firstChild;
       const op = textNode.textContent.charAt(offset-1);
@@ -434,9 +448,9 @@ export class Editor extends Element {
           this.replaceChar(line, textNode, offset, '÷');
           break;
       }
-    }
+    }*/
     
-    let [tokens, ast] = this.parseTape(editor.value)
+    let [tokens, ast] = this.parseTape(editor.value);
     this.evalTokens(tokens);
     this.post(new Event("save-update", {bubbles: true}), true);
     
