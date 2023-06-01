@@ -30,7 +30,7 @@ const env = {
   colors: {}
 };
 
-const getLineCordinates = (token)=>{
+const getLineCoordinates = (token)=>{
   const { startColumn, startLine} = token;
   const left = env.marginLeft + (startColumn * env.charWidth);
   const top = env.height - env.marginTop - ((startLine - env.atLine) * env.lineSpacing);
@@ -39,7 +39,7 @@ const getLineCordinates = (token)=>{
   return {left, top, right, bottom};
 }
 
-const getNodeCordinates = (token)=>{
+const getNodeCoordinates = (token)=>{
   const { startColumn, startLine, endColumn, endLine } = token;
   const { endColumn: nodeEndColumn } = token.node;
   
@@ -50,7 +50,7 @@ const getNodeCordinates = (token)=>{
   return {left, top, right, bottom};
 }
 
-const getTextCordinates = (token)=>{
+const getTextCoordinates = (token)=>{
   const { startColumn, startLine, endColumn, endLine } = token;
   const left = env.marginLeft + (startColumn * env.charWidth);
   const top = env.height - env.marginTop - ((startLine - env.atLine) * env.lineSpacing);
@@ -69,7 +69,7 @@ const DrawToken = (page, token, color)=>{
     page.setRGBFill(color.r, color.g, color.b);
   }
   page.textRect(
-    getTextCordinates(token),
+    getTextCoordinates(token),
     token.image,
     page.TALIGN_LEFT
   );
@@ -79,10 +79,10 @@ const DrawErrorLine = (page, token, color)=>{
   page.endText();
   page.setDash();
   page.setRGBStroke(color.r, color.g, color.b);
-  const cords = getTextCordinates(token);
+  const cords = getTextCoordinates(token);
   page.moveTo(cords.left,cords.bottom + 5);
   if(token.tokenType.name === 'LParen' && token.hasOwnProperty('node')){
-    const endCords = getNodeCordinates(token);
+    const endCords = getNodeCoordinates(token);
     page.lineTo(endCords.right, endCords.bottom + 5);
   }
   else {
