@@ -93,8 +93,8 @@
       }  
     }
     
-    refreshTabs(objdata){
-      this.tabs.postEvent(new Event("refresh", {data: objdata}));      
+    refreshTabs(state){
+      this.tabs.postEvent(new Event("refresh", {data: state}));      
     }
     
     saveCaretPosition(){
