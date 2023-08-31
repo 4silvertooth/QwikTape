@@ -75,6 +75,9 @@ To execute macosx binary use this command.
 sudo chmod +x qwiktape
 sudo xattr -d com.apple.quarantine qwiktape
 ```
+# Mentions
+[ilovefreesoftware](https://www.ilovefreesoftware.com/17/webware/free-virtual-notepad-for-windows-with-calculator-annotations-qwiktape.html) made a little tutorial to use QwikTape.
+
 # Coming up.
 * i18n
 
