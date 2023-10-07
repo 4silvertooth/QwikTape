@@ -1,8 +1,12 @@
-<img src="Logo.png" align="right"
+<p align="center">
+<img src="Logo.png"
      alt="QwikTape logo by Viral Ghelani" width="144" height="166">
-Do calculations, annotate it like you would on a paper "qwikly".
-
+</p>
+<p  align="center">
+Do calculations, annotate it like you would on a paper "qwikly". 
+</p>
 <img src="build/main-screen.png" width="750">
+
 
 # Features
 * Write text, calculations, and annotations with the same ease as you would on paper or in a book.
@@ -18,13 +22,13 @@ Do calculations, annotate it like you would on a paper "qwikly".
 * Customize colors using the settings menu <img src="src/assets/gear.svg" width="20">, number of decimals to display and indent length can be changed too.
 * Tape calculation doesn't use operator precedence, the results will be as you would type it on a calculator. 
 ```
-       1.00
-+      2.00
-×      3.00
-═══════════
-       9.00
+       100.00
++      200.00
+×        3.00
+═════════════
+       900.00
 ```
-* Expressions use operator precedence. `myvar = 1 + 2 × 3` myvar is `7`.
+* Expressions use operator precedence. `myvar = 100 + 200 × 3` myvar is `700`.
 * All calculations are performed with infinite precision, resulting in highly accurate and reliable results, so [`0.1 + 0.2 = 0.3`](https://0.30000000000000004.com/)
 * Export your tape as PDF <img src="src/assets/pdf.svg" width="24">.
 
