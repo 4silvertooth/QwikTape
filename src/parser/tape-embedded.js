@@ -265,9 +265,9 @@ class TapeParser extends BaseParser {
           }
           else { //either Identifier or DefinedIdentifier
             const { startColumn, ws } = lastToken
-            if(startColumn - ws + this.decimalPosition > padding) {
+            if(startColumn - ws + lastToken.image.length > padding) {
               const startOffset = startColumn - ws
-              padding = startOffset + token.image.length - this.decimalDigits - 1 + this.minPad
+              padding = startOffset + lastToken.image.length - this.decimalDigits - 1 + this.minPad
             }
           }
         }
