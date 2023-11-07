@@ -435,21 +435,6 @@ export class Editor extends Element {
 
   ["on ^change at :root"](evt, editor){
     if(evt.reason == 4) return;
-    /*if((evt.reason == 5 || evt.reason == 1) && this.settings.replaceOperator == true) {
-      let [line, offset] = editor.plaintext.selectionStart;
-      const textNode = editor.children[line]?.firstChild;
-      const op = textNode.textContent.charAt(offset-1);
-      //todo: benchmark switch statement vs if-else for performance
-      switch(op){
-        case '*':
-          this.replaceChar(line, textNode, offset, '×');
-          break;
-        case '/':
-          this.replaceChar(line, textNode, offset, '÷');
-          break;
-      }
-    }*/
-    
     let [tokens, ast] = this.parseTape(editor.value);
     this.evalTokens(tokens);
     this.post(new Event("save-update", {bubbles: true}), true);

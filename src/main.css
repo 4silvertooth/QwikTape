@@ -26,20 +26,6 @@
     //flow: stack;
   }
 
-  /*body > section.sidepanel > button#close {
-    position: relative;
-    stroke-width: 1px;
-    foreground-position: 50%;
-    foreground-size: 10dip 10dip;
-
-    border-radius: 50%;
-    background: #eee;
-    cursor: pointer;
-    foreground-image: url(path:m0 0 2-2m0 2-2-2);
-    margin: 1em 0.5em 0 *;
-    cursor: pointer;
-  }*/
-
   :root > section.editor > div.controls {
     margin-left: *;
     margin-right: 1em;
