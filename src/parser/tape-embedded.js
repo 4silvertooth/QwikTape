@@ -104,7 +104,7 @@ const Infinite = createToken({
 //todo: check for behavior on browser
 const Annotation = createToken({
   name: "Annotation",
-  pattern: /(?<=[a-zA-Z]\w*[ \t]*=.*)[^\n]+|(?<=[\w\d]+%?[ \t]*)[^\)\+\-\*×\/\÷\r]+/,
+  pattern: /(?<=[a-zA-Z]\w*[ \t]*=.*)[^\n]+|(?<=[\w\d]+%?[ \t]*)[^\+\-\*×\/\÷\r]+/,
   line_breaks: false,
   start_chars_hint: [...chars,..."123456790."],
 })
