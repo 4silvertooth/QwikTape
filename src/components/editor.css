@@ -10,7 +10,7 @@
     width: 100*;
     height: max-content;
     min-height: 100%;
-    min-width: max-content;
+    //min-width: max-content;
     margin: 24dip 25* 24dip 25*;
     box-shadow: 0px 2dip 4dip rgba(0,0,0,0.40);     
 
@@ -40,7 +40,8 @@
     
   :root > text {
     white-space: pre-wrap;
-    height:1.4em;
+    word-wrap: break-word;
+    //height:1.4em;
     line-height:1.4em;
   }
   
