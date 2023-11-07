@@ -91,26 +91,28 @@
     white-space: pre-wrap;
     word-break: break-all;
   }
-
-  :root > menu.popup {
+}
+@set popup-menu 
+{
+  :root {
     font-size: 10pt;
   }
 
-  :root > menu.popup > li {
+  :root > li {
     foreground-size: 18dip;
     foreground-position: 4dip 50%;
   }
 
-  :root > menu.popup > li:hover {
-    background: color(accent-color);
+  :root > li:hover {
+    //background: color(accent-color);
     cursor: pointer;
   }
   
-  :root > menu.popup > li#delete {
+  :root > li#delete {
     foreground-image: url(../assets/delete.svg);
   }
 
-  :root > menu.popup > li#rename {
+  :root > li#rename {
     foreground-image: url(../assets/rename.svg);
   }  
 }

@@ -39,7 +39,7 @@
   }
     
   :root > text {
-    white-space:pre;
+    white-space: pre-wrap;
     height:1.4em;
     line-height:1.4em;
   }

@@ -1,4 +1,5 @@
 *.exe
+*.dll
 .vs
 main/resources.cpp
 *.aps

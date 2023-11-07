@@ -341,7 +341,7 @@ export class Editor extends Element {
     );
     if(!toolTipToken) return;
     const tooltip = <popup.tooltip>{toolTipToken.tooltip}</popup>;
-    const position = {x: evt.windowX, y: evt.windowY };
+    const position = {popupAt: 7, x: evt.windowX, y: evt.windowY};
     this.shownPopup = this.popup(tooltip, position);
 
     return true;

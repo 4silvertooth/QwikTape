@@ -20,7 +20,7 @@ export class BrowseStorage extends Element
   ["on ^click at div.context[key]"](evt, el) {
     const freezed = el.getAttribute("freeze") === 'true' ? true : false;
     this.$("menu.popup > li#delete").state.disabled = freezed;
-    this.popup = el.popup(this.$("menu.popup"));
+    this.popup = el.popup(this.$("menu.popup"), {anchorAt: 5, popupAt: 7});
     return true;
   }
   
@@ -102,7 +102,7 @@ export class BrowseStorage extends Element
           {tape.id === this.renaming ? <input index={index}>{tape.name}</input> : <div.name>{tape.name}</div>}
         </div> 
       })}
-      <menu.popup>
+      <menu.popup styleset={__DIR__ + "browse-storage.css#popup-menu"}>
         <li #rename>Rename</li>
         <li #delete>Delete</li>
       </menu>

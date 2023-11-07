@@ -177,7 +177,7 @@
     }
     
     ["on browse-tapes"](evt, el) {
-      this.componentUpdate({browse: !this.browse});      
+      this.componentUpdate({browse: !this.browse, showSettings: false});      
     }
 
     ["on settings-changed"](evt, form){
@@ -206,7 +206,7 @@
     }
 
     ["on click at :root section.editor > div.controls > #settings"](evt, el){
-      this.componentUpdate({showSettings: true});
+      this.componentUpdate({showSettings: true, browse: false});
     }
     
     ["on settings-close"](evt, el){
@@ -258,7 +258,7 @@
       return <body styleset={__DIR__+"main.css#main"}>
         {
           this.browse && 
-          <section.sidepanel>
+          <section.sidepanel.files>
             <BrowseStorage current={this.currentTape.id} list={Storage.all()}/>
           </section>
         }
@@ -269,7 +269,12 @@
             { hasPdf() && <button #pdf/> }
           </div>
         </section>
-        { this.showSettings && <SettingsForm formData={this.settings}/> }
+        { 
+          this.showSettings && 
+          <section.sidepanel>
+            <SettingsForm formData={this.settings}/>
+          </section>  
+        }  
       </body>;
     }
   }

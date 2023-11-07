@@ -16,8 +16,11 @@
     flow: horizontal;
   }
 
+  :root > section.sidepanel.files {
+    width: 220dip;
+  }
   :root > section.sidepanel {
-    size: 220dip;
+    width: 0.30*;
     height: *;
     background: #eee;
     //flow: stack;
