@@ -13,17 +13,24 @@ export class BrowseStorage extends Element
     this.componentUpdate(props);
   }
   
+  popupMenu(){
+    return (
+      <menu.popup styleset={__DIR__ + "browse-storage.css#popup-menu"}>
+        <li #rename>Rename</li>
+        <li #delete>Delete</li>
+      </menu>
+    );
+  }
+  
   ["on click at div[key]"](evt, el) {
     this.post( new Event("open-tape", {bubbles: true, data: el.getAttribute("key")}));
   }
 
   ["on ^click at div.context[key]"](evt, el) {
-    const freezed = el.getAttribute("freeze") === 'true' ? true : false;
-    this.$("menu.popup > li#delete").state.disabled = freezed;
-    this.popup = el.popup(this.$("menu.popup"), {anchorAt: 5, popupAt: 7});
-    return true;
+    this.popup = el.popup(Element.create(this.popupMenu()), {anchorAt: 9, popupAt: 7});
+    //return true;
   }
-  
+
   /*["on mouseleave"](evt, el) {
     if(this && this.popup) {
       this.popup.state.popup = false;
@@ -58,6 +65,8 @@ export class BrowseStorage extends Element
   }
 
   ["on ^click at menu.popup > #rename"](evt, el){
+    this.popup.state.popup = false;
+    this.popup = null;
     const key = evt.source.getAttribute("key");
     const index = evt.source.getAttribute("index");
     this.componentUpdate({renaming: key});
@@ -65,10 +74,12 @@ export class BrowseStorage extends Element
       this.post(()=>{
         this.$("input").state.focus = true;
       });  
-    }  
+    }
   }
 
   ["on ^click at menu.popup > #delete"](evt, el){
+    this.popup.state.popup = false;
+    this.popup = null;
     const key = evt.source.getAttribute("key");
     const index = evt.source.getAttribute("index");
     this.componentUpdate({deleting: key});
@@ -97,15 +108,11 @@ export class BrowseStorage extends Element
         return <div key={tape.id} current={tape.id == this.current} deleting={tape.id === this.deleting}>
           <div.file>
             <div.content.middle>{tape.text ? tape.text.split(/\r*\n/).slice(-4).join("\n") : "Type Something"}</div>
-            <div.context freeze={tape.freeze} index={index} key={tape.id}/>
+            <div.context index={index} key={tape.id}/>
           </div>
           {tape.id === this.renaming ? <input index={index}>{tape.name}</input> : <div.name>{tape.name}</div>}
         </div> 
       })}
-      <menu.popup styleset={__DIR__ + "browse-storage.css#popup-menu"}>
-        <li #rename>Rename</li>
-        <li #delete>Delete</li>
-      </menu>
     </section>
   }  
 }
