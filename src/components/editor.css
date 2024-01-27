@@ -10,7 +10,7 @@
     width: 100*;
     height: max-content;
     min-height: 100%;
-    //min-width: max-content;
+    min-width: max-content;
     margin: 24dip 25* 24dip 25*;
     box-shadow: 0px 2dip 4dip rgba(0,0,0,0.40);     
 
@@ -24,7 +24,11 @@
     stroke: rgba(215, 215, 193, 50%);
     stroke-width: 1px;
   }
-  
+
+  :root[word-wrap=true] {
+    min-width: auto;    
+  }
+
   @media window-width < 800dip {
     :root {
       margin: 24dip 1* 24dip 1*;
@@ -38,10 +42,17 @@
     background-attachment: local;
   }
     
-  :root > text {
+  :root[word-wrap=true] > text {
     white-space: pre-wrap;
     word-wrap: break-word;
-    //height:1.4em;
+    height: auto;
+    line-height:1.4em;
+  }
+
+  :root > text {
+    white-space: pre-wrap;
+    word-wrap: normal;
+    height:1.4em;
     line-height:1.4em;
   }
   

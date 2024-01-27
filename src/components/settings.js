@@ -72,6 +72,12 @@ export class SettingsForm extends Element
           <option value={false}>NO</option>
         </select>
 
+        <label>Use wordwrap?</label>
+        <select as='auto' (wordwrap)>
+          <option value={true}>YES</option>
+          <option value={false}>NO</option>
+        </select>
+
         <label>Editor color theme.</label>
         <Theme (colors)/>
       </form>

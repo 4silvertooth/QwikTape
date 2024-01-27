@@ -459,6 +459,6 @@ export class Editor extends Element {
   }
  
   render(){
-    return <plaintext styleset={__DIR__ + "editor.css#editor"} id='tape'/>
+    return <plaintext word-wrap={this.settings.wordwrap} styleset={__DIR__ + "editor.css#editor"} id='tape'/>
   }
 }

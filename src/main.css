@@ -4,14 +4,13 @@
     flow: horizontal;
     margin: 0;
     overflow: hidden;
-    position: relative;
     z-index: -1;
   }
 
   :root > section.editor {
     size: *;
     min-width: 0.25*;
-    overflow: scroll-indicator;
+    overflow: auto;
     background: white;
     flow: horizontal;
   }

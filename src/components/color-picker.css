@@ -39,6 +39,7 @@
     size: *;
     flow: stack;
     cursor: crosshair;
+    position: relative;
   }
   
   :root > widget > #palette {

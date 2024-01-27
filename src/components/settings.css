@@ -4,6 +4,7 @@
     padding: 12dip;
     size: *;
     background: #eee;
+    overflow-y: scroll;
   }
 
   :root > form {
@@ -15,7 +16,7 @@
   
   :root > form > input {
     width: 4em;
-    height: 2em;
+    height: 1.8em;
     line-height: 1.8em;
     margin-bottom: 1em;
   }
@@ -27,7 +28,7 @@
   :root > form > input > caption {
     text-align: center;
     vertical-align: middle;
-    line-height: inherit;
+    line-height: 1.8em;
     padding: 0;
   }
 
