@@ -129,12 +129,15 @@ export class Editor extends Element {
     
     range.setStart(startNode, 0);
     range.setEnd(startNode, startNode.textContent.length);
-    if(range.marks().includes('Error')){
-      startNode.parentElement.setAttribute('Error', true);
-    }
-    else if(startNode.parentElement.hasAttribute('Error')){
-      startNode.parentElement.removeAttribute('Error');
-    }
+    const attributes = ['Error', 'Seperator'];
+    attributes.forEach((attribute) => {
+      if(range.marks().includes(attribute)){
+        startNode.parentElement.setAttribute(attribute, true);
+      }
+      else if(startNode.parentElement.hasAttribute(attribute)){
+        startNode.parentElement.removeAttribute(attribute);
+      }
+    });
   }
   
   insertNewLineBefore(token){
@@ -189,6 +192,7 @@ export class Editor extends Element {
     this.evalTokens(remaining);
   }
   
+  /**
   padToken(token){
     const line = this.children[token.startLine-1].firstChild;
     const startColumn = token.startColumn-1;
@@ -199,8 +203,9 @@ export class Editor extends Element {
     this.plaintext.update( (transact)=>{
       transact.setText(line, text);
       return true;
-    })
+    });
   }
+  */
   
   replace(lineNode, fromPos, toPos, padding, withText){
     let prefix, text, suffix;
@@ -222,7 +227,7 @@ export class Editor extends Element {
     this.plaintext.update( (transact)=>{
       transact.setText(lineNode, text);
       return true;
-    })
+    });
   }
   
   eraseToken(token){
@@ -247,7 +252,6 @@ export class Editor extends Element {
     if(!fromTokens) return;
     let [caretLine, caretColumn] = caret ?? this.plaintext.selectionStart;
     caretLine += 1;
-
     return fromTokens.find((token)=>{
       const node = token.node ?? token;
       if(caretLine >= node.startLine && caretLine <= node.endLine ){
@@ -279,7 +283,6 @@ export class Editor extends Element {
       transact.setText(result, text);
       return true;
     });
-    
     this.plaintext.selectRange(node.startLine+1, text.length, node.startLine+1, text.length);
     this.postEvent(new Event("change", {bubbles: true}));
   }
@@ -357,15 +360,17 @@ export class Editor extends Element {
     const lineNode = this.children[startLine];
     if(this.ast){
       const inserts = this.filterTokens(this.ast, tokenType.Insert);
-      const token = this.getTokenUnderCaret(inserts, [startLine, lineNode.textContent.length+1])
-      if(token) this.insertResult(token);
+      const token = this.getTokenUnderCaret(inserts, [startLine, lineNode.textContent.length+1]);
+      if(token) {
+        this.insertResult(token);
+      }  
     }
   }
   
   ["on keyup at :root"](evt, editor){
     if(evt.code === 'ArrowUp' || evt.code === 'ArrowDown'){
       this.postEvent( new Event('change', {bubbles: true}) );
-    }    
+    }
   }
   
   #allowedKeys = ['Enter', 'NumpadEnter', 'Backspace', 'Delete', 'Escape'];
@@ -388,16 +393,30 @@ export class Editor extends Element {
     }
 
     if(evt.code === 'Enter' || evt.code === 'NumpadEnter'){
+      //don't insert result, if result already on next line
+      const blocks = this.filterTokens(this.lex.tokens, tokenType.Block);
+      const [caretLine, caretColumn] = this.plaintext.selectionStart;      
+      const resultToken = this.getTokenUnderCaret(blocks, [caretLine, caretColumn+1]);
+      if(resultToken) {
+        this.plaintext.update( (transact) => {
+          transact.execCommand('navigate:down');
+          transact.execCommand('navigate:line-start');
+          return true;
+        });        
+        return true;
+      }
+      
       this.postEvent( new Event('checkForResults', { bubbles: true, data:this.plaintext.selectionStart }) );
       return;
     }
 
     if(evt.code === 'Backspace' || evt.code === 'Delete'){
       if(this.plaintext.selectionText) return;
-      const blocks = this.filterTokens(this.lex.tokens, tokenType.Block)
+      const blocks = this.filterTokens(this.lex.tokens, tokenType.Block);
       let token = this.getTokenUnderCaret(blocks);
       if(token){
         this.eraseToken(token.node);
+        this.postEvent(new Event("change", {bubbles: true}));
         return true;
       }
     }
@@ -450,8 +469,7 @@ export class Editor extends Element {
         Object.assign(error.token, {tooltip: error});
       }
       catch(e){
-        //todo: sometimes the object is not extensible
-        console.log(e);
+        console.log(e); //sometimes the object is not extensible
       }
       this.mark(error.token, ['Error']);
     })

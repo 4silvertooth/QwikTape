@@ -50,10 +50,16 @@
   }
 
   :root > text {
-    white-space: pre-wrap;
+    white-space: pre;
     word-wrap: normal;
     height:1.4em;
     line-height:1.4em;
+  }
+  
+  :root > text[Seperator=true] {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: clip;
   }
   
   text[Error] {
