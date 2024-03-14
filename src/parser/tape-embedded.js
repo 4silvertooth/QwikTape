@@ -26,8 +26,6 @@ const LParen = createToken({ name: "LParen", pattern: /\(/ });
 const RParen = createToken({ name: "RParen", pattern: /\)/ });
 const Pow = createToken({ name: "Power", pattern: /\^/, categories: [Operator] });
 
-const TokenType = {NewLine: NewLine, Block: 1, Insert: 2, Tooltip: 3};
-
 //not using ; in the parser code below to reduce noise
 
 const Minus = createToken({ 
@@ -100,11 +98,9 @@ const Infinite = createToken({
   pattern: /Infinity/,
 })
 
-//don't remove \r from second match
-//todo: check for behavior on browser
 const Annotation = createToken({
   name: "Annotation",
-  pattern: /(?<=[a-zA-Z]\w*[ \t]*=.*)[^\n]+|(?<=[\w\d]+%?[ \t]*)[^\+\-\*×\/\÷\r]+/,
+  pattern: /(?<=[\w\d]+%?[ \t]*).+(?<!( |[^\d])+[\/\÷\+\-\*\×])/,
   line_breaks: false,
   start_chars_hint: [...chars,..."123456790."],
 })
@@ -174,6 +170,8 @@ const SuffixIdentifier = createToken({
   line_breaks: false,
 })
 
+const TokenType = {NewLine: NewLine, Block: 1, Insert: 2, Tooltip: 3, Annotation: Annotation};
+
 Equal.LABEL = "=";
 ResultEqual.LABEL = "=";
 Operator.LABEL = "+|-|*|×|/|÷|^";
@@ -194,9 +192,10 @@ const tokens = [
   Plus, Minus,
   Mult, Div,  Pow,
   ResultEqual, Equal,
-  NumberLiteral, Percentage,
-  Variable, Identifier, DefinedIdentifier,
+  Percentage,  
   Annotation,
+  NumberLiteral,
+  Variable, Identifier, DefinedIdentifier,
   Text, 
   Operator,
 ]
@@ -323,7 +322,9 @@ class TapeParser extends BaseParser {
         }  
 
         if (tokenMatcher(operator, Minus)) {
-          Object.assign(y, {style: ['NegetiveLiteral']})          
+          if(!y.style?.includes("Error")){
+            Object.assign(y, {style: ['NegetiveLiteral']})
+          }
           return x.value -= y.value
         }      
 

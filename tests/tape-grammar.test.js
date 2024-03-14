@@ -33,11 +33,15 @@ test('line comments starting with unicodes', () => {
 
 test('annotations', () => {
   expect(parse("12 test").lex.errors).toEqual([]);
+  expect(parse("12 test").lex.tokens[1].tokenType.name).toEqual("Annotation");
+  expect(parse("12 01/01/01").lex.tokens[1].tokenType.name).toEqual("Annotation");
   expect(parse("12 test").parser.errors).toEqual([]);
   expect(parse("12 = test").lex.tokens[1].image).toEqual("= test");
   expect(parse("12 = test\n+ 12\n═══\n  24.00 = test").parser.errors).toEqual([]);
   expect(parse("12 = test\n+ 12\n═══\n  24.00 = test").lex.tokens[8].image).toEqual("=");
   expect(parse("12 = test\n+ 12\n═══\n  24.00 = test").lex.tokens[9].image).toEqual("test");
+  expect(parse("12 = test\n+ 12\n═══\n  24.00 = test").lex.tokens[9].tokenType.name).toEqual("SuffixIdentifier");
+  expect(parse("12 = test\n+ 12\n═══\n  24.00 = test comment").lex.tokens[10].tokenType.name).toEqual("Annotation");
 });
 
 test('invalid expression needs newline between', () => {

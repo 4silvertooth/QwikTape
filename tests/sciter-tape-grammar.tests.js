@@ -85,9 +85,8 @@ testGroup(`${locale[TEST_LOCALE]} Format`, ()=> {
     expect(parse(`${INT} test`).parser.errors).equal([]);
     expect(parse(`${INT} = test`).lex.tokens[1].image).equal(`= test`);
     expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).parser.errors).equal([]);
-    console.log(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex);
-    expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[8].image).equal(`=`);
-    expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[9].image).equal(`test`);
+    expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[9].image).equal(`=`);
+    expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[10].image).equal(`test`);
   });
 
   test('invalid expression requiring newline', () => {

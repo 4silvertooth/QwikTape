@@ -309,6 +309,20 @@ export class Editor extends Element {
     this.value = tape.text;
   }*/
   
+  sanitizeAnnotationToken(token){
+    const lineNode = this.children[token.startLine-1].firstChild;
+    const [caretLine, caretColumn] = this.plaintext.selectionStart;
+    
+    const check = /^ *\d[\/\÷\+\-\*\×]/g;
+    const found = token.image.match(check);
+    if(found && caretColumn == token.startColumn-1){
+      const text = this.replace(lineNode, token.startColumn-1, token.startColumn - 1 + found[0].length,0, "");
+      lineNode.nodeValue = text;
+      this.postEvent(new Event("change", {bubbles: true}));
+      return true;
+    }
+  }
+  
   setCaretPos(startLine, startOffset, endLine, endOffset){
     this.state.focus  = true;
     this.plaintext.selectRange(startLine, startOffset, endLine, endOffset);
@@ -410,6 +424,15 @@ export class Editor extends Element {
       return;
     }
 
+    if(evt.code === 'Delete'){
+      if(this.plaintext.selectionText) return;
+      const annotations = this.lex.tokens.filter((token)=>QwikTape.tokenMatcher(token, tokenType.Annotation));
+      const [caretLine, caretColumn] = this.plaintext.selectionStart;
+      let token = this.getTokenUnderCaret(annotations, [caretLine, caretColumn+1]);
+      if(token){
+        return this.sanitizeAnnotationToken(token);
+      }        
+    }
     if(evt.code === 'Backspace' || evt.code === 'Delete'){
       if(this.plaintext.selectionText) return;
       const blocks = this.filterTokens(this.lex.tokens, tokenType.Block);
@@ -425,6 +448,7 @@ export class Editor extends Element {
   ["on ^keypress at :root"](evt, editor){
     if(this.settings.replaceOperator != true) return;
     if(evt.key !== '*' && evt.key !== '/') return;
+    if(evt.altKey) return; //pressing alt key will override symbol change
     
     evt.key = (evt.key == '*') ? '×' : '÷';
   }
@@ -438,7 +462,7 @@ export class Editor extends Element {
   // const CHANGE_BY_INS_CONSECUTIVE_CHAR = 5; // single char insertion, previous character was inserted in previous position  
   // const CHANGE_BY_CODE = 6; 
 
-  ["on changing at :root"](evt, editor){
+  /*["on changing at :root"](evt, editor){
     if(!evt.data && this.settings.replaceOperator != true) 
       return;
 
@@ -450,7 +474,7 @@ export class Editor extends Element {
       evt.data = '÷';
       return true;
     }
-  }
+  }*/
 
   ["on ^change at :root"](evt, editor){
     if(evt.reason == 4) return;
