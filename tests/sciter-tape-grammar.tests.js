@@ -87,6 +87,10 @@ testGroup(`${locale[TEST_LOCALE]} Format`, ()=> {
     expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).parser.errors).equal([]);
     expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[9].image).equal(`=`);
     expect(parse(`${INT} = test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[10].image).equal(`test`);
+    expect(parse(`${INT} test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test`).lex.tokens[10].tokenType.name).equal("SuffixIdentifier");
+    expect(parse(`${INT} test\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test annotation`).lex.tokens[11].tokenType.name).equal("Annotation");
+    expect(parse(`${INT} test 01/01/2080\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test annotation`).lex.tokens[1].image).equal("test 01/01/2080");
+    expect(parse(`${INT} test 01/01/2080\n+ ${INT}\n═══\n  ${SUM.toLocaleString()} = test annotation`).lex.tokens[1].tokenType.name).equal("Annotation");
   });
 
   test('invalid expression requiring newline', () => {
