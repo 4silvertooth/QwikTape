@@ -79,6 +79,14 @@ To execute macosx binary use this command.
 sudo chmod +x qwiktape
 sudo xattr -d com.apple.quarantine qwiktape
 ```
+### Relocating QwikTape to a Portable Location (e.g., a Pen Drive)
+To move QwikTape to a portable location:
+
+* Locate the `qwiktapes.db` file, typically found in the `Documents` folder of your operating system.
+Move the `qwiktapes.db` file to the same directory as the QwikTape application executable.
+
+* If QwikTape does not detect the `qwiktapes.db` file in the `Documents` folder, it will automatically search for the file in the same directory as the application executable.
+
 # Mentions
 [ilovefreesoftware](https://www.ilovefreesoftware.com/17/webware/free-virtual-notepad-for-windows-with-calculator-annotations-qwiktape.html) made a little tutorial to use QwikTape.
 
