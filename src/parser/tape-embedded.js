@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 "use math";
 
 import { default as chevrotain } from "../chevrotain/chevrotain.min.js";
@@ -28,7 +28,7 @@ const Pow = createToken({ name: "Power", pattern: /\^/, categories: [Operator] }
 
 //not using ; in the parser code below to reduce noise
 
-const Minus = createToken({ 
+const Minus = createToken({
   name: "Minus", 
   pattern: /(?<!([-\+\*×\/÷][ \t]*)|═(\r?\n[ \t]*))-/,
   categories: [Sums, Operator],
@@ -323,7 +323,9 @@ class TapeParser extends BaseParser {
 
         if (tokenMatcher(operator, Minus)) {
           if(!y.style?.includes("Error")){
-            Object.assign(y, {style: ['NegetiveLiteral']})
+            if (tokenMatcher(y, NumberLiteral)) {
+              Object.assign(y, {style: ['NegetiveLiteral']})
+            }
           }
           return x.value -= y.value
         }      
@@ -675,7 +677,7 @@ class TapeParser extends BaseParser {
     })
 
     this.RULE("aggregate", (lhsValue, padding)=> {
-      let nl, seperator, sign, number, identifier
+      let nl, seperator, number, identifier
       //seperator = $.LA(0)
       nl = $.CONSUME(NewLine)
       //$.MANY(()=>$.CONSUME(NewLine))

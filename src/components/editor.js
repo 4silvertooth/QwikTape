@@ -1,4 +1,4 @@
-import * as sciter from "@sciter";
+﻿import * as sciter from "@sciter";
 import { BigNumEnv } from "../parser/bignum.js";
 import { toPdf } from "../util/pdf.js";
 
@@ -358,7 +358,7 @@ export class Editor extends Element {
     );
     if(!toolTipToken) return;
     const tooltip = <popup.tooltip>{toolTipToken.tooltip}</popup>;
-    const position = {popupAt: 7, x: evt.windowX, y: evt.windowY};
+    const position = {popupAt: 7, x: evt.windowX + 10, y: evt.windowY};
     this.shownPopup = this.popup(tooltip, position);
 
     return true;
@@ -501,6 +501,6 @@ export class Editor extends Element {
   }
  
   render(){
-    return <plaintext word-wrap={this.settings.wordwrap} styleset={__DIR__ + "editor.css#editor"} id='tape'/>
+    return <plaintext word-wrap={this.settings.wordwrap} styleset={__DIR__ + "editor.css#editor"} id='tape' dir='ltr'/>
   }
 }

@@ -1,4 +1,4 @@
-export class ColorPicker extends Element
+﻿export class ColorPicker extends Element
 {
   color;
   constructor(props) {
@@ -12,45 +12,68 @@ export class ColorPicker extends Element
     const palette = this.$('#palette');
     const marker = this.$('#marker');
     this.post(()=>{
-      const [w,h] = palette.state.box("dimension","inner");
+      const [w,h] = palette.state.box("dimension");
       marker.style.set({
         left: w * this.color.s,
         top: h - h * this.color.v,
       });
     });
   }
+  
+  get value() { return this.color; }
+  set value(color) { this.color = color; }
+  
+  selectColor({x, y}){
+    const palette = this.$('#palette');
+    const marker =  this.$('#marker');
 
-  //click event won't have x,y cordinates of cursor
-  ["on mousedown at :root > widget"](evt, el){
-    const [w,h] = el.state.box("dimension");
+    const [w,h] = palette.state.box("dimension");
     const hue = this.$("#hue").value;
-    const s = evt.x / w;
-    //const l = (0.5 * (1 - s) + 0.5) * (1 - (evt.y / h)); //for hsl
-    const v = 1 - evt.y / h;
+    const s = x / w;
+    //const l = (0.5 * (1 - s) + 0.5) * (1 - (y / h)); //for hsl
+    const v = 1 - y / h;
     const color = Graphics.Color.hsv(hue, s, v);
-    /*//no change visible, as popoup will close
-    const marker = this.$('#marker');
+
     marker.style.set({
-      left: evt.x,
-      top: evt.y,
+      left: x,
+      top: y,
     });
-    */
-    this.postEvent(new Event('select-color', {bubbles: true, data: color}));
+    this.value = color;
   }
 
+  //click event won't have x,y cordinates of cursor  
+  ["on ^mousedown at :root"](evt, el){
+    if(evt.target.$is('#hue')) return; //event on child element not firing in popup
+    this.selectColor(evt);
+    this.postEvent(new Event("change", {bubbles:true}));
+    return true;
+  }
+    
   ["on change at :root > #hue"](evt, el){
     this.style.variables({'hue-color': el.value});
+    const marker = this.$('#marker');
+    const position = {
+      x: marker.style['left'],
+      y: marker.style['top']
+    }
+    this.selectColor(position);
+    this.postEvent(new Event("change", {bubbles:true}));
+    return true;
+  }
+  
+  ["on change at :popup"](e, popup) {
+    this.postEvent(new Event('select-color', {bubbles: true, data: popup.value}));
     return true;
   }
 
   render(){
-    return <menu.popup styleset={__DIR__ + "color-picker.css#picker"}>
-      <widget role='menu-item'>
+    return <widget styleset={__DIR__ + "color-picker.css#picker"}>
+      <widget.palette>
         <div #palette/>
         <div #marker/>
       </widget>  
       <div #hue min=0 max=360 value={this.color.h} styleset={__DIR__ + "color-picker.css#hue"}></div>
-    </menu>;
+    </widget>;
   }  
 }
 

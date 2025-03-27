@@ -1,4 +1,4 @@
-@set hue < std-hslider-base {
+﻿@set hue < std-hslider-base {
   :root {
     display: block;
     background: linear-gradient(to right,red 0%,#ff0 16.66%,#0f0 33.33%,#0ff 50%,#00f 66.66%,#f0f 83.33%,red 100%);
@@ -32,6 +32,7 @@
     margin: 0;
     padding: none;
     var(hue-color): 0deg;
+    behavior: clickable;
   }
   
   :root > widget {
@@ -44,9 +45,9 @@
   
   :root > widget > #palette {
     background: linear-gradient(to left, hsv(var(hue-color),100%,100%), hsv(var(hue-color),0%,100%));
-    foreground: linear-gradient(90deg, rgba(0,0,0, 0), rgba(0,0,0,1));
+    foreground: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,1));
     //background: linear-gradient(to left, hsl(var(hue-color),100,50), hsl(var(hue-color),0,100));
-    //foreground: linear-gradient(90deg, rgba(0,0,0, 0), rgba(0,0,0,1));
+    //foreground: linear-gradient(180deg, rgba(0,0,0, 0), rgba(0,0,0,1));
     size: *;
     margin: 0;
     padding: none;

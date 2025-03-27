@@ -1,4 +1,4 @@
-import { Color } from "color-picker.js"
+﻿import { Color } from "color-picker.js"
 export const themes = [
   {
     'editor-text' : '#3a3636',

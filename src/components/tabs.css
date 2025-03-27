@@ -1,4 +1,4 @@
-@set tabs 
+﻿@set tabs 
 {
   
   :root {
@@ -8,8 +8,11 @@
     background-color: #eee;
     font-family: monospace;
     font-size: 10pt;
-    vertical-align: middle;
     position: relative;
+  }
+  
+  :root > * {
+    margin: * 0;
   }
 
   /*@media window-width < 500dip {
@@ -23,6 +26,10 @@
     foreground-position: 4dip 50%;
   }
   
+  :root > div, :root > div > * {
+    content-vertical-align: middle;
+  }
+
   :root > div {
     flow: horizontal;
     height: 80%;
@@ -31,7 +38,6 @@
     padding-left: 24dip;
     padding-right: 4dip;
     margin-right: 0.5em;
-    vertical-align: middle;
     border-radius: 2dip;
   }
   
@@ -44,6 +50,7 @@
     text-overflow: ellipsis;
     word-break: break-all;
     overflow: hidden;
+    white-space: nowrap;
   }
   
   /*:root > div > label {
@@ -79,12 +86,12 @@
 
     foreground-position: 50% 50%;
     foreground-image: url(../assets/Icon.svg);
-    foreground-size: 22dip 22dip;
+    foreground-size: 24dip 24dip;
 
     background-size: 60dip 75dip;
     fill: rgba(255,247,64,0.50);
     stroke-width: 2dip;
-    stroke: rgba(0,0,0, 0.10);
+    stroke: rgba(0,0,0, 0.20);
     background-image: url(path:M0 0 0 75 30 60 60 75 60 0);
     overflow: hidden;
   }
@@ -97,6 +104,7 @@
     margin-left: 1em;
     width: 30dip;
     height: 30dip;
+    vertical-align: middle;
   }
 
   :root > div:hover {

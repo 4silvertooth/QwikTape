@@ -20,11 +20,11 @@
   }
   
   paintName(gfx){
-   const clip = new Graphics.Path("M0 0 0 75 30 60 60 75 60 0");
-   const text = new Graphics.Text("QwikTape ".repeat(8), "logo-background-text");
-   gfx.pushLayer(clip);
-   gfx.draw(text, {x: 0, y: 0, alignment: 7});
-   gfx.popLayer();
+    const clip = new Graphics.Path("M0 0 0 75 30 60 60 75 60 0");
+    const text = new Graphics.Text("QwikTapeQwik\r\nTape QwikTape\r\n".repeat(8), "logo-background-text");
+    gfx.pushLayer(clip);
+    gfx.draw(text, {x: 0, y: 0, alignment: 7});
+    gfx.popLayer();
   }
   
   get currentIndex(){

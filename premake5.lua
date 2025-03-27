@@ -94,7 +94,7 @@ project "qwiktape"
     files {"sdk/include/sciter-*.h",
            "sdk/include/sciter-*.hpp",
            "sdk/include/aux-*.*",
-           "sdk/include/sciter-win-main.cpp",
+           "sdk/include/sciter-main.cpp",
            "main/res/dpi-aware.manifest",
            "main/res/qwiktape.rc",
           }

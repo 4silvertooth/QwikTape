@@ -1,4 +1,4 @@
-import { Theme } from "theme.js"
+﻿import { Theme } from "theme.js"
 
 //locale refrence https://en.wikipedia.org/wiki/Decimal_separator
 

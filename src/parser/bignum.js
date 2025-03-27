@@ -1,4 +1,4 @@
-const BigNum = BigDecimal || parseFloat;
+﻿const BigNum = BigDecimal || parseFloat;
 const BigNumEnv = BigFloatEnv || {prec: 128}; //fall to 128bit precision if in RangeError
 const NUMBER_LOCALE_STRING = 1234567.89.toLocaleString();
 

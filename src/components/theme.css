@@ -1,4 +1,4 @@
-@set theme
+﻿@set theme
 {
   :root {
     var(editor-text): #000000;
@@ -54,6 +54,6 @@
     color: #fbfbf8;
     box-shadow: inset 0px 5px 7px 0px rgba(0,0,0, 0.60);
     cursor: pointer;
-    vertical-align: middle;
+    content-vertical-align: middle;
   }
 }

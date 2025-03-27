@@ -13,6 +13,7 @@
     overflow: auto;
     background: white;
     flow: horizontal;
+    //behavior: pager;
   }
 
   :root > section.sidepanel.files {

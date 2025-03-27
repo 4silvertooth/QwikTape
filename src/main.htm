@@ -53,7 +53,7 @@
 <title>QwikTape</title>
 <style src="window.css"/>
 
-<script type="module">
+<script type="module" defer>
   import { BigNumEnv } from "./parser/bignum.js";
   import { Storage, getTapesDirectory } from "./storage/storage.js";
   import { Tabs, BrowseStorage, Editor, SettingsForm } from "./components/index.js";
@@ -186,7 +186,7 @@
       this.componentUpdate({settings: evt.data});
     }
     
-    ["on click at :root section.editor > div.controls > #pdf"](evt, el)=>{
+    ["on click at :root #pdf"](evt, el)=>{
       const name = this.currentTape.name;
       const file = Window.this.selectFile({
         mode: 'save',
@@ -262,7 +262,7 @@
             <BrowseStorage current={this.currentTape.id} list={Storage.all()}/>
           </section>
         }
-        <section.editor>
+        <section.editor cols=1 page-template="page-template.htm">
           <Editor tape={this.currentTape} settings={this.settings}/>
           <div.controls>
             { !this.showSettings && <button #settings/> }
@@ -282,6 +282,7 @@
   document.$("header > window-caption").patch(<Tabs recent={Storage.recent()} activeId={Storage.lastId()}/>);
   document.body.patch(<App/>);
 </script>
+
 </head>
 
 <body>

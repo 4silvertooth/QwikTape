@@ -11,7 +11,14 @@ html:owns-focus {
 html > header { width:*; background-color: #eee;}
 html > header { width:*; flow:horizontal; height:42dip; margin:0; } 
 
-html > header > window-caption { display:block; line-height:42dip; width:*; padding:0 1em; color:color(text-color); }
+html > header > window-caption { 
+  display:block; 
+  line-height:42dip; 
+  width:*; 
+  padding:0 1em; 
+  color:color(text-color);
+}
+
 html > header > window-buttons { 
   display:block; 
   position: fixed;
@@ -66,12 +73,12 @@ html > header > window-buttons > window-button[role="window-minimize"] { foregro
 }
 
 .logo-background-text {
-  text-align: center;
+  text-align: left;
   font-size: 8pt; 
-  color: gray; 
+  color: gray;
   width: 60dip; 
-  height: 60dip;
-  white-space: pre-wrap; 
+  height: 75dip;
+  white-space: pre-wrap;
   word-break: break-all;
   line-height: 1em;
 }

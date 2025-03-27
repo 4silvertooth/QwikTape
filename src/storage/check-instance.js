@@ -1,12 +1,13 @@
-import * as sys from "@sys";
+﻿import * as sys from "@sys";
 
 const INSTANCE = "qwiktape";
 
-(async () => {
+(async ()=>{
   const pipe = new sys.Pipe();
   document.on("beforeunload", evt => pipe.close());
+  
   try {
-    pipe.bind('qwiktape');
+    pipe.bind(INSTANCE);
     pipe.listen();
     let scan;
     while (true) {

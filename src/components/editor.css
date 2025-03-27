@@ -1,4 +1,4 @@
-@import url(theme.css);
+﻿@import url(theme.css);
 
 @set editor < theme
 {
@@ -36,24 +36,24 @@
   }
   
   :root {
-    background-size: 800px 25px;
+    background-size: 800px 25dip;
     background-image: url(path:m0 0 800 0m0 -25);
     background-repeat: repeat;
     background-attachment: local;
   }
-    
+  
   :root[word-wrap=true] > text {
     white-space: pre-wrap;
     word-wrap: break-word;
     height: auto;
-    line-height:1.4em;
+    line-height: 25dip;
   }
 
   :root > text {
     white-space: pre;
     word-wrap: normal;
-    height:1.4em;
-    line-height:1.4em;
+    height: 25dip;
+    line-height: 25dip;
   }
   
   :root > text[Seperator=true] {
@@ -122,15 +122,22 @@
   popup.tooltip {
     cursor: default;
     color: #000;
+    font-family: monospace;
+    font-size: 18px;
     width: max-content;
     max-width: 25em;
-    padding: 10px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: *;
+    padding-bottom: *;
     margin: 8px 0;
     background: var(editor-tooltip);
+    border-color: var(editor-tooltip);
     border-radius: 0 8dip 8dip 8dip;
     white-space: pre-wrap;
     word-break: break-all;
     text-overflow: epsillon;
     overflow-y: scroll-indicator;
+    content-vertical-align: middle;
   }
 }  

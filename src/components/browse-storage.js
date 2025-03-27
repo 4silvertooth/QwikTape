@@ -1,4 +1,4 @@
-export class BrowseStorage extends Element
+﻿export class BrowseStorage extends Element
 {
   list;
   current;
@@ -54,6 +54,7 @@ export class BrowseStorage extends Element
   ["on keydown at :root > div > input"](evt, el){
     if(evt.code !== "Enter" && evt.code !== "NumpadEnter" && evt.code !== "Escape") return;
     this.componentUpdate({renaming: null});
+    return true;
   }
   
   ["on blur at :root > div > input"](evt, el){
